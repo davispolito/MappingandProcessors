@@ -1,7 +1,0 @@
-{
-	"InstallScripts" : 
-	[
-		"/Users/josnyder/dev/MappingandProcessors/_deps/catch2-subbuild/cmake_install.cmake"
-	],
-	"Parallel" : false
-}

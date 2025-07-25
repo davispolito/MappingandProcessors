@@ -1,6 +1,10 @@
 cmake-build-debug
+CMakeCache*
 cmake-build-release
 cmake-*
-
+CMakeFiles
+*.cmake 
+*.ninja
 .idea
 _deps
+test
