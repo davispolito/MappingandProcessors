@@ -44,8 +44,7 @@ void tMapping_free (tMapping** const mapping) {
    mpool_free((char*)*mapping, (*mapping)->mempool);
 }
 
-void tMappingAdd_(tMapping *mapping, ATOMIC_FLOAT* insource, uint8_t insource_uuid,  ATOMIC_FLOAT* dest_param, uint8_t dest_uuid,
-    tSetter setter, uint8_t dest_param_index, void* obj, LEAF* leaf, ATOMIC_FLOAT* scalingValue = nullptr)
+void tMappingAdd_(tMapping *mapping, ATOMIC_FLOAT* insource, uint8_t insource_uuid,  ATOMIC_FLOAT* dest_param, uint8_t dest_uuid, tSetter setter, uint8_t dest_param_index, void* obj, LEAF* leaf, ATOMIC_FLOAT CPPDEREF scalingValue)
  {
      if (mapping->uuid == 255)
          mapping->uuid = getNextUuid(leaf);
@@ -64,8 +63,11 @@ void tMappingAdd_(tMapping *mapping, ATOMIC_FLOAT* insource, uint8_t insource_uu
      mapping->destinationProcessorUniqueID = dest_uuid;
      mapping->paramID = dest_param_index;
      mapping->destObject = obj;
+#ifdef __cplusplus
      if (scalingValue != nullptr)
-         mapping->scalingValues[currIndex] = scalingValue;
+#endif
+
+         mapping->scalingValues[currIndex] =  scalingValue;
      mapping->numUsedSources++;
  }
 
@@ -76,7 +78,7 @@ void tMappingAdd_(tMapping *mapping, ATOMIC_FLOAT* insource, uint8_t insource_uu
 // `destParam`.  The mapping scales this value by the factors in
 // `scalingValues`.
 void tMappingAdd(tMapping *mapping, tProcessor *outputProcessor,
-    tProcessor *destProcessor, uint8_t destParam, uint8_t source, LEAF* leaf, ATOMIC_FLOAT *scalingValue=nullptr)
+    tProcessor *destProcessor, uint8_t destParam, uint8_t source, LEAF* leaf, ATOMIC_FLOAT CPPDEREF scalingValue)
 
 {
 
@@ -96,18 +98,22 @@ void tMappingAdd(tMapping *mapping, tProcessor *outputProcessor,
     mapping->destinationProcessorUniqueID = destProcessor->processorUniqueID;
     mapping->paramID = destParam; 
     mapping->destObject = destProcessor->object;
-    if (scalingValue != nullptr)
+#ifdef __cplusplus
+     if (scalingValue != nullptr)
+#endif
         mapping->scalingValues[source] = scalingValue;
 }
 
 
 
 void tMappingUpdateDest(tMapping* mapping, uint8_t source,
-    tProcessor *newDestProcessor, uint8_t destParam, ATOMIC_FLOAT *scalingValue=nullptr) {
+    tProcessor *newDestProcessor, uint8_t destParam, ATOMIC_FLOAT CPPDEREF scalingValue) {
     mapping->initialVal = CPPDEREF &newDestProcessor->inParameters[destParam];
     mapping->setter = newDestProcessor->setterFunctions[destParam];
     mapping->destinationProcessorUniqueID = newDestProcessor->processorUniqueID;
-    if (scalingValue != nullptr)
+#ifdef __cplusplus
+     if (scalingValue != nullptr)
+#endif
         mapping->scalingValues[source] = scalingValue;
 }
 void mapping_to_preset(tMapping *mapping, tMappingPresetUnion * preset)

@@ -42,11 +42,6 @@ typedef struct _tFiltModule {
     void* theFilt;
     uint32_t moduleType;
     uint32_t uniqueID;
-    tTickFuncFloatInReturningFloat tick; // The object's tick function
-    tFiltInternalParamSetFunc freq_set_func;
-    tFiltInternalParamSetFunc gain_set_func;
-    tFiltInternalParamSetFunc Q_set_func;
-    tSetter setterFunctions[MAX_NUM_PARAMS]; // Array containing setter functions
     float* dbTableAddress;
     uint32_t dbTableScalar;
     float dbTableOffset;
@@ -56,6 +51,7 @@ typedef struct _tFiltModule {
     ATOMIC_FLOAT CPPDEREF params[MAX_NUM_PARAMS];
     ATOMIC_FLOAT outputs[1];
     ATOMIC_FLOAT inputs[1];
+    uint32_t filtType;
     float amp;
     float cutoffKnob;
     float keyFollow;
@@ -74,6 +70,9 @@ void tFiltModule_free(void** const filt);
 
 // tick
 void tFiltModule_tick (tFiltModule const filt, float*);
+
+
+void tFiltModule_setParameter(tFiltModule const filt, FiltParams param_type,float input);
 
 //Modulatable setters
 void tFiltModule_setMIDIPitch (tFiltModule const filt, float const input);

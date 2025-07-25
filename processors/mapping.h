@@ -89,14 +89,14 @@ namespace leaf
 
     void tMapping_initToPool (tMapping** const mapping, tMempool* const mp);
     void tMappingAdd (tMapping* mapping, tProcessor* outputProcessor, tProcessor* destProcessor, uint8_t destParam,
-        uint8_t source, LEAF *leaf, ATOMIC_FLOAT* scalingptr);
+        uint8_t source, LEAF *leaf, ATOMIC_FLOAT CPPDEREF scalingptr);
     void tMappingUpdateDest(tMapping* mapping, uint8_t source,
-        LEAF* leaf, tProcessor *newDestProcessor, uint8_t destParam,
-        ATOMIC_FLOAT *scalingValue);
+         tProcessor *newDestProcessor, uint8_t destParam,
+        ATOMIC_FLOAT CPPDEREF scalingValue);
     void tMappingAdd_(tMapping *mapping, ATOMIC_FLOAT* insource, uint8_t insource_uuid,
         ATOMIC_FLOAT* dest_param, uint8_t dest_uuid,tSetter setter, uint8_t dest_param_index,
         void* obj, LEAF* leaf,
-    ATOMIC_FLOAT* scalingValue);
+    ATOMIC_FLOAT CPPDEREF scalingValue);
 
 #ifdef __cplusplus
 

@@ -1,0 +1,12 @@
+{
+	"InstallScripts" : 
+	[
+		"/Users/josnyder/dev/MappingandProcessors/cmake_install.cmake",
+		"/Users/josnyder/dev/MappingandProcessors/LEAF/cmake_install.cmake",
+		"/Users/josnyder/dev/MappingandProcessors/LEAF/test/cmake_install.cmake",
+		"/Users/josnyder/dev/MappingandProcessors/_deps/catch2-build/cmake_install.cmake",
+		"/Users/josnyder/dev/MappingandProcessors/_deps/catch2-build/src/cmake_install.cmake",
+		"/Users/josnyder/dev/MappingandProcessors/test/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

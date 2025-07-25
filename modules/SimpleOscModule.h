@@ -44,13 +44,17 @@ typedef void (*tFreqSetFunc)(void*, float);
 
 typedef struct _tOscModule {
     void* theOsc;
-    uint32_t moduleType;
     uint32_t uniqueID;
-    tTickFuncReturningFloat tick; // The object's tick function
-    tFreqSetFunc freq_set_func;
-    tSetter setterFunctions[MAX_NUM_PARAMS]; // Array containing setter functions
     ATOMIC_FLOAT CPPDEREF params[MAX_NUM_PARAMS];
     ATOMIC_FLOAT outputs[1];
+    uint32_t moduleType;
+    uint32_t osctype;
+
+//    tTickFuncReturningFloat tick; // The object's tick function
+//    tFreqSetFunc freq_set_func;
+
+//    tSetter setterFunctions[MAX_NUM_PARAMS]; // Array containing setter functions
+
     float fine;
     float harmonicMultiplier;
     float pitchOffset;
@@ -66,7 +70,7 @@ typedef struct _tOscModule {
     int hStepped;
     int pStepped;
     int syncMode;
-    int osctype;
+
     tMempool mempool;
 } _tOscModule;
 
