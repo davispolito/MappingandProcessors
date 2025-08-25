@@ -73,13 +73,80 @@ void tOscModule_setType (tOscModule const osc, float typefloat)
     }
     osc->osctype = type;
 }
+void tOscModule_setParameter(tOscModule const osc, OscParams param_type,float input)
+{
+	switch (param_type) {
+	case OscEventWatchFlag:
 
-void tOscModule_initToPool(void** const osc, float* const params, float id, tMempool* const mempool)
+		break;
+	case OscMidiPitch:
+		osc->inputNote = input * 127.0f;
+		break;
+	case OscHarmonic:
+		input -= 0.5f;
+		input *= 2.f;
+		input *= 15.0f;
+		if (osc->hStepped) {
+			input = roundf(input);
+		}
+
+		if (input >= 0.0f) {
+			osc->harmonicMultiplier = (input + 1.0f);
+		} else {
+			osc->harmonicMultiplier = (1.0f / fabsf((input - 1.0f)));
+		}
+		break;
+	case OscPitchOffset:
+		input -= 0.5f;
+		input *= 24.0f;
+		if (osc->pStepped) {
+			input = roundf(input);
+		}
+		osc->pitchOffset = input;
+		break;
+	case OscPitchFine:
+		osc->fine = (input - 0.5f) * 2.f;
+		break;
+	case OscFreqOffset:
+		osc->freqOffset = (input * 4000.0f) - 2000.f;
+		break;
+	case OscShapeParam:
+		break;
+	case OscAmpParam:
+		osc->amp = input;
+		break;
+	case OscGlide:
+		float factor = 1.0f;
+		if (input >= 0.00001f) {
+			factor = 1.0f - (expf(-osc->invSr / input));
+		}
+		tExpSmooth_setFactor(osc->pitchSmoother, factor);
+		break;
+	case OscSteppedHarmonic:
+		osc->hStepped = roundf(input);
+		break;
+	case OscSteppedPitch:
+		osc->pStepped = roundf(input);
+		break;
+	case OscSyncMode:
+		osc->syncMode = roundf(input);
+		break;
+	case OscSyncIn:
+		break;
+	case OscType:
+		tOscModule_setType(osc, input);
+		break;
+	default:
+		break;
+	}
+}
+
+void tOscModule_initToPool(void** const osc, float* const param, float id, tMempool* const mempool)
 {
     _tMempool* m = *mempool;
     _tOscModule* OscModule = (_tOscModule*) (*osc = (_tOscModule*) mpool_alloc (sizeof (_tOscModule), m));
 #ifndef __cplusplus
-    memcpy(OscModule->params, params, OscNumParams*sizeof(float));
+    memcpy(OscModule->params, param, OscNumParams*sizeof(float));
     int type = roundf(CPPDEREF OscModule->params[OscType]);
 #endif __cplusplus
     OscModule->uniqueID = id;
@@ -216,73 +283,7 @@ void tOscModule_tick (tOscModule const osc,float* buffer)
     osc->outputs[0] = *buffer;
 }
 
-void tOscModule_setParameter(tOscModule const osc, OscParams param_type,float input)
-{
-	switch (param_type) {
-	case OscEventWatchFlag:
 
-		break;
-	case OscMidiPitch:
-		osc->inputNote = input * 127.0f;
-		break;
-	case OscHarmonic:
-		input -= 0.5f;
-		input *= 2.f;
-		input *= 15.0f;
-		if (osc->hStepped) {
-			input = roundf(input);
-		}
-
-		if (input >= 0.0f) {
-			osc->harmonicMultiplier = (input + 1.0f);
-		} else {
-			osc->harmonicMultiplier = (1.0f / fabsf((input - 1.0f)));
-		}
-		break;
-	case OscPitchOffset:
-		input -= 0.5f;
-		input *= 24.0f;
-		if (osc->pStepped) {
-			input = roundf(input);
-		}
-		osc->pitchOffset = input;
-		break;
-	case OscPitchFine:
-		osc->fine = (input - 0.5f) * 2.f;
-		break;
-	case OscFreqOffset:
-		osc->freqOffset = (input * 4000.0f) - 2000.f;
-		break;
-	case OscShapeParam:
-		break;
-	case OscAmpParam:
-		osc->amp = input;
-		break;
-	case OscGlide:
-		float factor = 1.0f;
-		if (input >= 0.00001f) {
-			factor = 1.0f - (expf(-osc->invSr / input));
-		}
-		tExpSmooth_setFactor(osc->pitchSmoother, factor);
-		break;
-	case OscSteppedHarmonic:
-		osc->hStepped = roundf(input);
-		break;
-	case OscSteppedPitch:
-		osc->pStepped = roundf(input);
-		break;
-	case OscSyncMode:
-		osc->syncMode = roundf(input);
-		break;
-	case OscSyncIn:
-		break;
-	case OscType:
-		tOscModule_setType(osc, input);
-		break;
-	default:
-		break;
-	}
-}
 
 
 
