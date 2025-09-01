@@ -39,8 +39,9 @@ typedef enum {
 typedef void (*tFiltInternalParamSetFunc)(void*, float);
 
 typedef struct _tFiltModule {
-    void* theFilt;
     uint32_t moduleType;
+    void* theFilt;
+
     uint32_t uniqueID;
     float* dbTableAddress;
     uint32_t dbTableScalar;

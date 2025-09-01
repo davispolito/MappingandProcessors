@@ -28,8 +28,9 @@ typedef enum {
 
 
 typedef struct _tEnvModule {
-    tADSRT theEnv;
     uint32_t moduleType;
+    tADSRT theEnv;
+
     uint32_t uniqueID;
     tTickFuncReturningFloat tick; // The object's tick function
     tSetter setterFunctions[MAX_NUM_PARAMS]; // Array containing setter functions
@@ -49,7 +50,7 @@ void tEnvModule_initToPool(void** const env, float* const params, float id, tMem
 void tEnvModule_free(void** const env);
 
 //note on action
-void tEnvModule_onNoteOn(tEnvModule const env, float pitch);
+void tEnvModule_onNoteOn(tEnvModule const env, float vel);
 
 // Modulatable setters
 // void tEnvModule_setRate (tEnvModule const env, float rate);

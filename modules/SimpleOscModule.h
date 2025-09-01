@@ -43,11 +43,12 @@ typedef enum {
 typedef void (*tFreqSetFunc)(void*, float);
 
 typedef struct _tOscModule {
+    uint32_t moduleType;
     void* theOsc;
     uint32_t uniqueID;
     ATOMIC_FLOAT CPPDEREF params[MAX_NUM_PARAMS];
     ATOMIC_FLOAT outputs[1];
-    uint32_t moduleType;
+
     uint32_t osctype;
 
 //    tTickFuncReturningFloat tick; // The object's tick function

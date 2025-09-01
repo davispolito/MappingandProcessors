@@ -24,8 +24,9 @@ typedef enum {
 
 
 typedef struct _tVCAModule {
-    void* theVCA;
     uint32_t moduleType;
+    void* theVCA;
+
     uint32_t uniqueID;
     tTickFuncFloatInReturningFloat tick; // The object's tick function
 

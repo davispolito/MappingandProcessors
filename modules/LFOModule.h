@@ -33,8 +33,9 @@ typedef enum {
 } LFOTypes;
 
 typedef struct _tLFOModule {
+    uint32_t moduleType;
    void* theLFO;
-   uint32_t moduleType;
+
    uint32_t uniqueID;
     tTickFuncReturningFloat tick; // The object's tick function
     // tSetter setterFunctions[MAX_NUM_PARAMS]; // Array containing setter functions

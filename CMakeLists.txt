@@ -28,6 +28,7 @@ add_library(procUtils
         processors/sysex_chunks.cpp
         processors/midi_sysex.cpp
         processors/funcmaps.cpp
+        processors/event_emitter.cpp
 )
 
 # Include directories for procUtils
