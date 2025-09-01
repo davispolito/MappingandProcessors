@@ -9,9 +9,12 @@
 
 #include <assert.h>
 
-void tFiltModule_init(void** const filt, float* params, float id, LEAF* const leaf)
-{
-    tFiltModule_initToPool(filt, params, id, &leaf->mempool);
+void tFiltModule_init(void** const filt, float* params, float id, LEAF* const leaf) {
+	if(leaf->resTable == NULL)
+		{
+		tLookupTable_init(&leaf->resTable,  0.0f, 10.0f, 0.5f, 2048,leaf);
+	}
+    tFiltModule_initToPool(filt, params, id, &leaf->mempool, leaf->resTable);
 }
 
 float dbToATableLookupFunction(float const in, float const sizeMinusOne, float* const tableAddress)
@@ -89,31 +92,31 @@ void tFiltModule_setRes(tFiltModule const filt, float const res)
 	 switch(filt->filtType)
 	 {
 	 case FiltTypeLowpass:
-		 tSVF_setQ((tSVF)filt->theFilt,resTableLookupFunction(res, filt->resTableAddress, filt->resTableSizeMinusOne));
+		 tSVF_setQ((tSVF)filt->theFilt,resTableLookupFunction(res, filt->table->table, filt->table->tableSize-1));
 		 break;
 	 case FiltTypeHighpass:
-		 tSVF_setQ((tSVF)filt->theFilt,resTableLookupFunction(res, filt->resTableAddress, filt->resTableSizeMinusOne));
+		 tSVF_setQ((tSVF)filt->theFilt,resTableLookupFunction(res, filt->table->table, filt->table->tableSize-1));
 		 break;
 	 case FiltTypeBandpass:
-		 tSVF_setQ((tSVF)filt->theFilt,resTableLookupFunction(res, filt->resTableAddress, filt->resTableSizeMinusOne));
+		 tSVF_setQ((tSVF)filt->theFilt,resTableLookupFunction(res, filt->table->table, filt->table->tableSize-1));
 		 break;
 	 case FiltTypeDiodeLowpass:
-		 tDiodeFilter_setQ((tDiodeFilter)filt->theFilt, resTableLookupFunction(res, filt->resTableAddress, filt->resTableSizeMinusOne));
+		 tDiodeFilter_setQ((tDiodeFilter)filt->theFilt, resTableLookupFunction(res, filt->table->table, filt->table->tableSize-1));
 		 break;
 	 case FiltTypePeak:
-		 tVZFilterBell_setBandwidth((tVZFilterBell)filt->theFilt, resTableLookupFunction(res*20.0f, filt->resTableAddress, filt->resTableSizeMinusOne));
+		 tVZFilterBell_setBandwidth((tVZFilterBell)filt->theFilt, resTableLookupFunction(res*20.0f, filt->table->table, filt->table->tableSize-1));
 		 break;
 	 case FiltTypeHighShelf:
-		 tVZFilterHS_setResonance((tVZFilterHS)filt->theFilt, resTableLookupFunction(res, filt->resTableAddress, filt->resTableSizeMinusOne));
+		 tVZFilterHS_setResonance((tVZFilterHS)filt->theFilt, resTableLookupFunction(res, filt->table->table, filt->table->tableSize-1));
 		 break;
 	 case FiltTypeLowShelf:
-		 tVZFilterLS_setResonance((tVZFilterLS)filt->theFilt, resTableLookupFunction(res, filt->resTableAddress, filt->resTableSizeMinusOne));
+		 tVZFilterLS_setResonance((tVZFilterLS)filt->theFilt, resTableLookupFunction(res, filt->table->table, filt->table->tableSize-1));
 		 break;
 	 case FiltTypeNotch:
-		 tVZFilterBR_setResonance((tVZFilterBR)filt->theFilt, resTableLookupFunction(res, filt->resTableAddress, filt->resTableSizeMinusOne));
+		 tVZFilterBR_setResonance((tVZFilterBR)filt->theFilt,resTableLookupFunction(res, filt->table->table, filt->table->tableSize-1));
 		 break;
 	 case FiltTypeLadderLowpass:
-		 tLadderFilter_setQ((tLadderFilter)filt->theFilt, resTableLookupFunction(res, filt->resTableAddress, filt->resTableSizeMinusOne));
+		 tLadderFilter_setQ((tLadderFilter)filt->theFilt, resTableLookupFunction(res, filt->table->table, filt->table->tableSize-1));
 		 break;
 	 default:
 		 break;
@@ -121,7 +124,7 @@ void tFiltModule_setRes(tFiltModule const filt, float const res)
 }
 
 
-void tFiltModule_initToPool(void** const filt, float* const params, float id, tMempool* const mempool)
+void tFiltModule_initToPool(void** const filt, float* const params, float id, tMempool* const mempool, tLookupTable resTable)
 {
     _tMempool* m = *mempool;
     _tFiltModule* FiltModule =(_tFiltModule *) ( *filt = (_tFiltModule*) mpool_alloc(sizeof(_tFiltModule), m));
@@ -136,7 +139,7 @@ void tFiltModule_initToPool(void** const filt, float* const params, float id, tM
     FiltModule->amp = 1.0f;
     FiltModule->invSr = m->leaf->invSampleRate;
     FiltModule->sr = m->leaf->sampleRate;
-
+	FiltModule->table = resTable;
     if (type == FiltTypeLowpass) {
         tSVF_initToPool((tSVF*)&FiltModule->theFilt, SVFTypeLowpass,10000.0f, 0.5f, mempool);
     }
@@ -333,11 +336,7 @@ void tFiltModule_setDBtoATableLocation (tFiltModule const filt, float* const tab
     filt->dbTableOffset = 0.00001f * filt->dbTableScalar;
 }
 
-void tFiltModule_setResTableLocation (tFiltModule const filt, float* tableAddress, uint32_t const tableSize)
-{
-    filt->resTableAddress = tableAddress;
-    filt->resTableSizeMinusOne = (float)(tableSize - 1);
-}
+
 
 void tFiltModule_setSampleRate (tFiltModule const filt, float const sr)
 {

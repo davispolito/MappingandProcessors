@@ -59,13 +59,15 @@ typedef struct _tFiltModule {
     float sr;
     float invSr;
     tMempool mempool;
+    tLookupTable table;
 } _tFiltModule;
 
 typedef _tFiltModule* tFiltModule;
 
 //init module
 void tFiltModule_init(void** const filt, float* const params, float id, LEAF* const leaf);
-void tFiltModule_initToPool(void** const filt, float* const params, float id, tMempool* const mempool);
+void tFiltModule_initToPool(void** const filt, float* const params, float id, tMempool* const mempool, tLookupTable resTable);
+
 void tFiltModule_free(void** const filt);
 
 // tick
