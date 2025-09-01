@@ -6,6 +6,7 @@
 #include <assert.h>
 #include "mapping.h"
 #include "sysex_chunks.h"
+#include "leaf.h"
 // Process mapping function
 #ifdef __cplusplus
 namespace leaf
@@ -77,45 +78,45 @@ void tMappingAdd_(tMapping *mapping, ATOMIC_FLOAT* insource, uint8_t insource_uu
 // `outputProcessor` to the input of `destProcessor` on the parameter 
 // `destParam`.  The mapping scales this value by the factors in
 // `scalingValues`.
-void tMappingAdd(tMapping *mapping, tProcessor *outputProcessor,
-    tProcessor *destProcessor, uint8_t destParam, uint8_t source, LEAF* leaf, ATOMIC_FLOAT CPPDEREF scalingValue)
+// void tMappingAdd(tMapping *mapping, tProcessor *outputProcessor,
+//     tProcessor *destProcessor, uint8_t destParam, uint8_t source, LEAF* leaf, ATOMIC_FLOAT CPPDEREF scalingValue)
+//
+// {
+//
+//     if (mapping->uuid == 255)
+//         mapping->uuid = getNextUuid(leaf);
+//     // Updates the _tMapping struct with the given arguments
+//     mapping->inSources[source] = &outputProcessor->outParameters[0];
+//     mapping->inUUIDS[source] = outputProcessor->processorUniqueID;
+//     mapping->numUsedSources++;
+//
+// //    mapping->scalingValues[0] = scalingValues[0];
+// //    mapping->scalingValues[1] = scalingValues[1];
+// //    mapping->scalingValues[2] = scalingValues[2];
+//
+//     mapping->initialVal = CPPDEREF &destProcessor->inParameters[destParam];
+//     mapping->setter = destProcessor->setterFunctions[destParam];
+//     mapping->destinationProcessorUniqueID = destProcessor->processorUniqueID;
+//     mapping->paramID = destParam;
+//     mapping->destObject = destProcessor->object;
+// #ifdef __cplusplus
+//      if (scalingValue != nullptr)
+// #endif
+//         mapping->scalingValues[source] = scalingValue;
+// }
 
-{
 
-    if (mapping->uuid == 255)
-        mapping->uuid = getNextUuid(leaf);
-    // Updates the _tMapping struct with the given arguments
-    mapping->inSources[source] = &outputProcessor->outParameters[0];
-    mapping->inUUIDS[source] = outputProcessor->processorUniqueID;
-    mapping->numUsedSources++;
-    
-//    mapping->scalingValues[0] = scalingValues[0];
-//    mapping->scalingValues[1] = scalingValues[1];
-//    mapping->scalingValues[2] = scalingValues[2];
-    
-    mapping->initialVal = CPPDEREF &destProcessor->inParameters[destParam];
-    mapping->setter = destProcessor->setterFunctions[destParam];
-    mapping->destinationProcessorUniqueID = destProcessor->processorUniqueID;
-    mapping->paramID = destParam; 
-    mapping->destObject = destProcessor->object;
-#ifdef __cplusplus
-     if (scalingValue != nullptr)
-#endif
-        mapping->scalingValues[source] = scalingValue;
-}
-
-
-
-void tMappingUpdateDest(tMapping* mapping, uint8_t source,
-    tProcessor *newDestProcessor, uint8_t destParam, ATOMIC_FLOAT CPPDEREF scalingValue) {
-    mapping->initialVal = CPPDEREF &newDestProcessor->inParameters[destParam];
-    mapping->setter = newDestProcessor->setterFunctions[destParam];
-    mapping->destinationProcessorUniqueID = newDestProcessor->processorUniqueID;
-#ifdef __cplusplus
-     if (scalingValue != nullptr)
-#endif
-        mapping->scalingValues[source] = scalingValue;
-}
+//
+// void tMappingUpdateDest(tMapping* mapping, uint8_t source,
+//     tProcessor *newDestProcessor, uint8_t destParam, ATOMIC_FLOAT CPPDEREF scalingValue) {
+//     mapping->initialVal = CPPDEREF &newDestProcessor->inParameters[destParam];
+//     mapping->setter = newDestProcessor->setterFunctions[destParam];
+//     mapping->destinationProcessorUniqueID = newDestProcessor->processorUniqueID;
+// #ifdef __cplusplus
+//      if (scalingValue != nullptr)
+// #endif
+//         mapping->scalingValues[source] = scalingValue;
+// }
 void mapping_to_preset(tMapping *mapping, tMappingPresetUnion * preset)
 {
     preset->data.uuid = mapping->uuid;

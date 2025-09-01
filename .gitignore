@@ -5,6 +5,7 @@ cmake-*
 CMakeFiles
 *.cmake 
 *.ninja
+*.tcl
 .idea
 _deps
 test

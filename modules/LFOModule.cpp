@@ -157,32 +157,3 @@ void tLFOModule_setSampleRate (tLFOModule const lfo, float sr)
     //how to handle this? if then cases for different types?
 
 }
-
-void tLFOModule_processorInit(tLFOModule const lfo, leaf::tProcessor* processor)
-{
-    // Checks that arguments are valid
-	if (lfo == NULL)
-	{
-		return;
-	}
-    if (processor == NULL)
-    {
-    	return;
-    }
-    processor->processorUniqueID = lfo->uniqueID;
-    processor->object = lfo;
-    processor->numSetterFunctions = LFONumParams;
-    processor->tick = reinterpret_cast<tTickFuncReturningVoid>(&tLFOModule_tick);
-    //memcpy(processor->setterFunctions, lfo->setterFunctions, LFONumParams*sizeof(void*));
-    //write over the rate setter since it has some scaling
-    processor->setterFunctions[LFORateParam] =  (tSetter)(&tLFOModule_setRate);
-    processor->setterFunctions[LFOShapeParam] = (tSetter)(&tLFOModule_setShape);
-    processor->setterFunctions[LFOPhaseParam] = (tSetter)(&tLFOModule_setPhase);
-    processor->setterFunctions[LFOEventWatchFlag] = (tSetter)(&tLFOModule_blankFunction);
-    processor->setterFunctions[LFOType] = (tSetter)(&tLFOModule_blankFunction);
-
-    processor->inParameters = lfo->params;
-    processor->outParameters = lfo->outputs;
-    processor->processorTypeID = ModuleTypeLFOModule;
-}
-

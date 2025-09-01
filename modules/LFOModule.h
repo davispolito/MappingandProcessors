@@ -7,7 +7,7 @@
 
 #include "leaf.h"
 #include "defs.h"
-#include "processor.h"
+// #include "processor.h"
 #include "Inc/leaf-mempool.h"
 #include "Inc/leaf-oscillators.h"
 
@@ -64,8 +64,6 @@ void tLFOModule_setRate (tLFOModule const lfo, float rate);
 //void tLFOModule_setRateTableLocationAndSize (tLFOModule const lfo, float* tableAddress, uint32_t size);
 void tLFOModule_setSampleRate (tLFOModule const lfo, float sr);
 
-//init processors
-void tLFOModule_processorInit(tLFOModule const lfo, LEAF_NAMESPACE tProcessor* processor);
 
 
 

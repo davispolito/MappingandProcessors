@@ -6,7 +6,7 @@
 
 #include "leaf.h"
 #include "defs.h"
-#include "processor.h"
+// #include "processor.h"
 #include "Inc/leaf-mempool.h"
 
 
@@ -55,7 +55,7 @@ void tVCAModule_setGain(tVCAModule const VCA, float gain);
 
 // Non-modulatable setters
 //init processors
-void tVCAModule_processorInit(tVCAModule const VCA, LEAF_NAMESPACE tProcessor* processor);
+// void tVCAModule_processorInit(tVCAModule const VCA, LEAF_NAMESPACE tProcessor* processor);
 
 
 

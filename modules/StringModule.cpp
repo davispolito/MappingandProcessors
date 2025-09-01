@@ -129,35 +129,3 @@ void tStringModule_tick(tStringModule const s,float* value)
     {
         }
 
-void tStringModule_processorInit(tStringModule const s, LEAF_NAMESPACE tProcessor* processor)
-    {
-
-        // Checks that arguments are valid
-       // assert(s != NULL);
-        //assert(processor != NULL);
-
-        processor->processorUniqueID = s->uniqueID;
-        processor->object = s;
-        processor->numSetterFunctions = StringNumParams;
-        processor->tick = (tTickFuncReturningVoid)&tStringModule_tick;
-
-        processor->setterFunctions[StringEventWatchFlag] = (tSetter)&tStringModule_setEventWatchFlag;
-        processor->setterFunctions[StringOversample]      = (tSetter)&tStringModule_setOversample;
-        processor->setterFunctions[StringFreq]            = (tSetter)&tStringModule_setFreq;
-        processor->setterFunctions[StringWaveLength]      = (tSetter)&tStringModule_setWaveLength;
-        processor->setterFunctions[StringDampFreq]        = (tSetter)&tStringModule_setDampFreq;
-        processor->setterFunctions[StringDecay]           = (tSetter)&tStringModule_setDecay;
-        processor->setterFunctions[StringTargetLevel]     = (tSetter)&tStringModule_setTargetLevel;
-        processor->setterFunctions[StringLevelSmooth]     = (tSetter)&tStringModule_setLevelSmooth;
-        processor->setterFunctions[StringLevelStrength]   = (tSetter)&tStringModule_setLevelStrength;
-        processor->setterFunctions[StringPickupPoint]     = (tSetter)&tStringModule_setPickupPoint;
-        processor->setterFunctions[StringLevelMode]       = (tSetter)&tStringModule_setLevelMode;
-        processor->setterFunctions[StringRippleGain]      = (tSetter)&tStringModule_setRippleGain;
-        processor->setterFunctions[StringRippleDelay]     = (tSetter)&tStringModule_setRippleDelay;
-        processor->setterFunctions[StringPluckPosition]   = (tSetter)&tStringModule_setPluckPosition;
-
-        processor->inParameters = s->params;
-        processor->outParameters = s->outputs;
-        processor->processorTypeID = ModuleTypeStringModule;
-    }
-

@@ -8,7 +8,8 @@
 
 
 #include <stdint.h>
-#include "processor.h"
+#include "leaf-mempool.h"
+
 #include "defs.h"
     #ifdef __cplusplus
     #include <cstdio>
@@ -88,11 +89,11 @@ namespace leaf
 
 
     void tMapping_initToPool (tMapping** const mapping, tMempool* const mp);
-    void tMappingAdd (tMapping* mapping, tProcessor* outputProcessor, tProcessor* destProcessor, uint8_t destParam,
-        uint8_t source, LEAF *leaf, ATOMIC_FLOAT CPPDEREF scalingptr);
-    void tMappingUpdateDest(tMapping* mapping, uint8_t source,
-         tProcessor *newDestProcessor, uint8_t destParam,
-        ATOMIC_FLOAT CPPDEREF scalingValue);
+    // void tMappingAdd (tMapping* mapping, tProcessor* outputProcessor, tProcessor* destProcessor, uint8_t destParam,
+    //     uint8_t source, LEAF *leaf, ATOMIC_FLOAT CPPDEREF scalingptr);
+    // void tMappingUpdateDest(tMapping* mapping, uint8_t source,
+    //      tProcessor *newDestProcessor, uint8_t destParam,
+    //     ATOMIC_FLOAT CPPDEREF scalingValue);
     void tMappingAdd_(tMapping *mapping, ATOMIC_FLOAT* insource, uint8_t insource_uuid,
         ATOMIC_FLOAT* dest_param, uint8_t dest_uuid,tSetter setter, uint8_t dest_param_index,
         void* obj, LEAF* leaf,

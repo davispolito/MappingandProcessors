@@ -6,7 +6,7 @@
 #define SIMPLEOSCMODULE_H
 #include "leaf.h"
 #include "defs.h"
-#include "processor.h"
+// #include "processor.h"
 #include "Inc/leaf-mempool.h"
 #include "Inc/leaf-oscillators.h"
 
@@ -90,6 +90,6 @@ void tOscModule_setMTOFTableLocation (tOscModule const osc, float* tableAddress)
 void tOscModule_setSampleRate (tOscModule const osc, float sr);
 
 //init processors
-void tOscModule_processorInit(tOscModule const osc, LEAF_NAMESPACE tProcessor* processor);
+// void tOscModule_processorInit(tOscModule const osc, LEAF_NAMESPACE tProcessor* processor);
 
 #endif //SIMPLEOSCMODULE_H

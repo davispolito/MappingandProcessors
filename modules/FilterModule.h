@@ -6,9 +6,9 @@
 
 #include "leaf.h"
 #include "defs.h"
-#include "processor.h"
 #include "Inc/leaf-mempool.h"
 #include "Inc/leaf-filters.h"
+#include "processor.h"
 
 
 typedef enum {

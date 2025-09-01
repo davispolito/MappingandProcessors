@@ -5,7 +5,6 @@
 #ifndef STRINGMODULE_H
 #define STRINGMODULE_H
 #include "defs.h"
-#include "processor.h"
 #include "Inc/leaf-mempool.h"
 #include "Inc/leaf-physical.h"
 #include "leaf.h"
@@ -49,7 +48,6 @@ void tStringModule_init(void** const module, float* const params, float id, LEAF
 void tStringModule_initToPool(void** const module, float* const params, float id, tMempool* const mempool);
 void tStringModule_free(void** const env);
 //init processors
-void tStringModule_processorInit(tStringModule const filt, LEAF_NAMESPACE tProcessor* processor);
 // Non-modulatable setters for tStringModule
 void tStringModule_setEventWatchFlag (tStringModule const s, float value);
 void tStringModule_setOversample      (tStringModule const s, int value);
