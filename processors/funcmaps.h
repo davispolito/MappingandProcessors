@@ -10,6 +10,9 @@
 #include "SimpleOscModule.h"
 #include "StringModule.h"
 #include "VCAModule.h"
+#include "processor.h"
+
+
 #ifdef __cplusplus
 namespace leaf
 {

@@ -69,5 +69,36 @@ void tVCAModule_tick (tVCAModule const VCA, float* buffer)
 
 // Non-modulatable setters
 
+//be sure to set the tables before initing the processor
+void tVCAModule_processorInit(tVCAModule const VCA, leaf::tProcessor* const processor)
+{
+    // Checks that arguments are valid
+	if (VCA == NULL)
+	{
+		return;
+	}
+	if (processor == NULL)
+	{
+		return;
+	}
+
+    processor->processorUniqueID = VCA->uniqueID;
+    processor->object = VCA;
+    processor->numSetterFunctions = VCANumParams;
+    processor->tick = (tTickFuncReturningVoid ) &tVCAModule_tick;
+
+    // processor->setterFunctions[VCAGain] = (tSetter)&(*VCA->setterFunctions[VCAGain]);
+    // processor->setterFunctions[VCAAudioInput] = (tSetter)&(*VCA->setterFunctions[VCAAudioInput]);
+
+//    for (int i = 0; i < VCANumParams; i++)
+//    {
+//        processor->setterFunctions[i](VCA, VCA->params[i]);
+//    }
+    processor->inParameters = VCA->params;
+    processor->outParameters = VCA->outputs;
+    processor->audioInParameters = VCA->inputs;
+    processor->processorTypeID = ModuleTypeVCAModule;
+}
+
 
 

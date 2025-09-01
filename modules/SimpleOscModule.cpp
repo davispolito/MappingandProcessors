@@ -305,3 +305,36 @@ void tOscModule_setMTOFTableLocation (tOscModule const osc, float* const tableAd
 
 
 
+void tOscModule_processorInit(tOscModule const osc, leaf::tProcessor* const processor)
+{
+    // Checks that arguments are valid
+	if (osc == NULL)
+	{
+		return;
+	}
+	if (processor == NULL)
+	{
+		return;
+	}
+
+
+    processor->processorUniqueID = osc->uniqueID;
+    processor->object = osc;
+    processor->numSetterFunctions = OscNumParams;
+    processor->tick = (tTickFuncReturningVoid )&tOscModule_tick;
+
+
+    processor->setterFunctions[OscType] = (tSetter)&tOscModule_setType;
+
+    // for (int i = 0; i < OscNumParams; i++)
+    // {
+    //
+    //     processor->setterFunctions[i](osc, osc->params[i]);
+    // }
+    processor->inParameters = osc->params;
+    processor->outParameters = osc->outputs;
+    processor->processorTypeID = ModuleTypeOscModule;
+}
+
+
+

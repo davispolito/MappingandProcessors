@@ -8,6 +8,7 @@
 #include "Inc/leaf-mempool.h"
 #include "Inc/leaf-physical.h"
 #include "leaf.h"
+#include "processor.h"
 
 typedef enum {
     StringEventWatchFlag,
@@ -35,7 +36,6 @@ typedef struct _tStringModule {
     uint32_t moduleType;
     uint32_t uniqueID;
     tTickFuncReturningFloat tick; // The object's tick function
-    tSetter setterFunctions[MAX_NUM_PARAMS]; // Array containing setter functions
     ATOMIC_FLOAT CPPDEREF params[MAX_NUM_PARAMS];
     ATOMIC_FLOAT outputs[1];
     tMempool mempool;
@@ -49,18 +49,9 @@ void tStringModule_initToPool(void** const module, float* const params, float id
 void tStringModule_free(void** const env);
 //init processors
 // Non-modulatable setters for tStringModule
-void tStringModule_setEventWatchFlag (tStringModule const s, float value);
-void tStringModule_setOversample      (tStringModule const s, int value);
-void tStringModule_setFreq            (tStringModule const s, float value);
-void tStringModule_setWaveLength      (tStringModule const s, float value);
-void tStringModule_setDampFreq        (tStringModule const s, float value);
-void tStringModule_setDecay           (tStringModule const s, float value);
-void tStringModule_setTargetLevel     (tStringModule const s, float value);
-void tStringModule_setLevelStrength     (tStringModule const s, float value);
-void tStringModule_setLevelSmooth     (tStringModule const s, float value);
-void tStringModule_setPickupPoint     (tStringModule const s, float value);
-void tStringModule_setLevelMode       (tStringModule const s, int value);
-void tStringModule_setRippleGain      (tStringModule const s, float value);
-void tStringModule_setRippleDelay     (tStringModule const s, float value);
-void tStringModule_setPluckPosition   (tStringModule const s, float value);
+void tStringModule_setParameter(tStringModule const s, StringModelParams param, float input);
+
+
+void tStringModule_processorInit(tStringModule const filt, LEAF_NAMESPACE tProcessor* processor);
+
 #endif //STRINGMODULE_H

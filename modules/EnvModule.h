@@ -53,7 +53,7 @@ void tEnvModule_onNoteOn(tEnvModule const env, float pitch);
 
 // Modulatable setters
 // void tEnvModule_setRate (tEnvModule const env, float rate);
-void tEnvModule_setParameter(tEnvModule* const env, int parameter_id, float input);
+void tEnvModule_setParameter(tEnvModule const env, int parameter_id, float input);
 // Non-modulatable setters
 void tEnvModule_setRateTableLocation (tEnvModule const env, float* tableAddress);
 void tEnvModule_setSampleRate (tEnvModule const env, float sr);
