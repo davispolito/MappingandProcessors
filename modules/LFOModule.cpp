@@ -32,20 +32,20 @@ void tLFOModule_initToPool(void** const lfo, float* const params, float id, tMem
     LFOModule->uniqueID = id;
     LFOModule->table = rateTable;
     LFOModule->params[LFOType] = 0;
-
+    LFOModule->lfo_type = type;
 
     LFOModule->mempool = m;
     // LFOModule->setterFunctions[LFOEventWatchFlag] = (tSetter)(&tLFOModule_blankFunction);
     // LFOModule->setterFunctions[LFOType] = (tSetter)(&tLFOModule_blankFunction);
     // LFOModule->setterFunctions[LFORateParam] = (tSetter)(&tLFOModule_setRate);
-    if (type == LFOTypeSineTri) {
+    if (LFOModule->lfo_type == LFOTypeSineTri) {
         tSineTriLFO_initToPool((tSineTriLFO*)&LFOModule->theLFO, mempool);
         // LFOModule->setterFunctions[LFOPhaseParam] = (tSetter)(&tSineTriLFO_setPhase);
         // LFOModule->setterFunctions[LFOShapeParam] = (tSetter)(&tSineTriLFO_setShape);
         LFOModule->freq_set_func = (tSetter)(&tSineTriLFO_setFreq);
         LFOModule->tick = (tTickFuncReturningFloat)(&tSineTriLFO_tick);
     }
-    else if (type == LFOTypeSawSquare) {
+    else if (LFOModule->lfo_type == LFOTypeSawSquare) {
 
         tSawSquareLFO_initToPool((tSawSquareLFO*)&LFOModule->theLFO, mempool);
         // LFOModule->setterFunctions[LFOPhaseParam] = (tSetter)(&tSawSquareLFO_setPhase);
@@ -53,7 +53,7 @@ void tLFOModule_initToPool(void** const lfo, float* const params, float id, tMem
         LFOModule->freq_set_func = (tSetter)(&tSawSquareLFO_setFreq);
         LFOModule->tick = reinterpret_cast<tTickFuncReturningFloat>(&tSawSquareLFO_tick);
     }
-    else if (type == LFOTypeSine) {
+    else if (LFOModule->lfo_type == LFOTypeSine) {
 
         tCycle_initToPool((tCycle*)&LFOModule->theLFO, mempool);
         // LFOModule->setterFunctions[LFOPhaseParam] = (tSetter)(&tCycle_setPhase);
@@ -61,7 +61,7 @@ void tLFOModule_initToPool(void** const lfo, float* const params, float id, tMem
         LFOModule->freq_set_func = (tSetter)(&tCycle_setFreq);
         LFOModule->tick = reinterpret_cast<tTickFuncReturningFloat>(&tCycle_tick);
     }
-    else if (type == LFOTypeTri) {
+    else if (LFOModule->lfo_type == LFOTypeTri) {
 
         tTriLFO_initToPool((tTriLFO*)&LFOModule->theLFO, mempool);
         // LFOModule->setterFunctions[LFOPhaseParam] = (tSetter)(&tTriLFO_setPhase);
@@ -69,7 +69,7 @@ void tLFOModule_initToPool(void** const lfo, float* const params, float id, tMem
         LFOModule->freq_set_func  = (tSetter)(&tTriLFO_setFreq);
         LFOModule->tick = reinterpret_cast<tTickFuncReturningFloat>(&tTriLFO_tick);
     }
-    else if (type == LFOTypeSaw) {
+    else if (LFOModule->lfo_type == LFOTypeSaw) {
 
         tIntPhasor_initToPool((tIntPhasor*)&LFOModule->theLFO, mempool);
         // LFOModule->setterFunctions[LFOPhaseParam] = (tSetter)(&tIntPhasor_setPhase);
@@ -77,7 +77,7 @@ void tLFOModule_initToPool(void** const lfo, float* const params, float id, tMem
         LFOModule->freq_set_func = (tSetter)(&tIntPhasor_setFreq);
         LFOModule->tick = reinterpret_cast<tTickFuncReturningFloat>(&tIntPhasor_tickBiPolar);
     }
-    else if (type == LFOTypeSquare) {
+    else if (LFOModule->lfo_type == LFOTypeSquare) {
 
         tSquareLFO_initToPool((tSquareLFO*)&LFOModule->theLFO, mempool);
         // LFOModule->setterFunctions[LFOPhaseParam] = (tSetter)(&tSquareLFO_setPhase);
@@ -117,7 +117,7 @@ void tLFOModule_free(void** const lfo)
 void tLFOModule_tick (tLFOModule const lfo)
 {
 
-        switch (lfo->moduleType)
+        switch (lfo->lfo_type)
         {
             case LFOTypeSineTri:
                 lfo->outputs[0] = tSineTriLFO_tick((tSineTriLFO)lfo->theLFO);

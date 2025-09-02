@@ -24,9 +24,11 @@ namespace leaf
 
     typedef struct Mapping
     {
-        tSetter setter; // Setter function for the parameter of the mapping
+        ModuleType dest_type;
+        // tSetter setter; // Setter function for the parameter of the mapping
         uint8_t uuid; //ID for the mapping's parameter
         uint8_t destinationProcessorUniqueID; // ID for destination processors that param is in
+
         uint8_t index;
         void* destObject; // OUT destination for the mapping
         uint8_t paramID;
@@ -87,7 +89,7 @@ namespace leaf
     void tMapping_init (tMapping** const mapping, LEAF* const leaf);
     void tMapping_free (tMapping** const mapping);
 
-
+    void tMapping_setParameter(void* module, int paramID, float val);
     void tMapping_initToPool (tMapping** const mapping, tMempool* const mp);
     // void tMappingAdd (tMapping* mapping, tProcessor* outputProcessor, tProcessor* destProcessor, uint8_t destParam,
     //     uint8_t source, LEAF *leaf, ATOMIC_FLOAT CPPDEREF scalingptr);

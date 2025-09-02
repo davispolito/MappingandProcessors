@@ -7,6 +7,12 @@
 #include "mapping.h"
 #include "sysex_chunks.h"
 #include "leaf.h"
+#include "SimpleOscModule.h"
+#include "VCAModule.h"
+#include "EnvModule.h"
+#include "FilterModule.h"
+#include "StringModule.h"
+#include "LFOModule.h"
 // Process mapping function
 #ifdef __cplusplus
 namespace leaf
@@ -28,6 +34,35 @@ void tMapping_initToPool (tMapping** const mapping, tMempool* const mp)
     map->uuid = 255;
 }
 
+void tMapping_setParameter(void* module, int paramID, float value) {
+    uint32_t type = *((uint32_t*)module);
+    switch (type)
+    {
+        case ModuleTypeOscModule:
+            tOscModule_setParameter((tOscModule) module,(OscParams) paramID, value);
+            break;
+
+        case ModuleTypeLFOModule:
+            tLFOModule_setParameter((tLFOModule) module, (LFOParams)paramID, value);
+            break;
+
+        case ModuleTypeEnvModule:
+            tEnvModule_setParameter((tEnvModule) module, (EnvParams)paramID, value);
+            break;
+
+        case ModuleTypeFilterModule:
+            tFiltModule_setParameter((tFiltModule) module,(FiltParams) paramID, value);
+            break;
+
+        case ModuleTypeStringModule:
+            tStringModule_setParameter((tStringModule) module, (StringModelParams) paramID, value);
+            break;
+
+        default:
+            // handle invalid type
+            break;
+    }
+}
 
 
 void processMapping (tMapping* mapping)
@@ -38,8 +73,8 @@ void processMapping (tMapping* mapping)
     {
         sum += (*mapping->inSources[i] * CPPDEREF mapping->scalingValues[i]) + mapping->bipolarOffset[i];
     }
-
-    mapping->setter(mapping->destObject, sum);
+    tMapping_setParameter(mapping->destObject,mapping->paramID,sum);
+    // mapping->setter(mapping->destObject, sum);
 }
 void tMapping_free (tMapping** const mapping) {
    mpool_free((char*)*mapping, (*mapping)->mempool);
@@ -60,7 +95,7 @@ void tMappingAdd_(tMapping *mapping, ATOMIC_FLOAT* insource, uint8_t insource_uu
  //    mapping->scalingValues[2] = scalingValues[2];
 
      mapping->initialVal = dest_param;
-     mapping->setter = setter;
+     // mapping->setter = setter;
      mapping->destinationProcessorUniqueID = dest_uuid;
      mapping->paramID = dest_param_index;
      mapping->destObject = obj;
