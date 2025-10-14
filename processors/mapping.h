@@ -38,7 +38,7 @@ namespace leaf
         ATOMIC_FLOAT* inSources[MAX_NUM_SOURCES]; // IN sources from processors
         ATOMIC_FLOAT CPPDEREF scalingValues[MAX_NUM_SOURCES]; // Scaling for the IN sources
         ATOMIC_FLOAT* initialVal; // The mapping's initial value
-        tMempool mempool;
+        tMempool *mempool;
     } tMapping;
 
     typedef struct MappingPreset
@@ -90,7 +90,7 @@ namespace leaf
     void tMapping_free (tMapping** const mapping);
 
     void tMapping_setParameter(void* module, int paramID, float val);
-    void tMapping_initToPool (tMapping** const mapping, tMempool* const mp);
+    void tMapping_initToPool (tMapping** const mapping, tMempool** const mp);
     // void tMappingAdd (tMapping* mapping, tProcessor* outputProcessor, tProcessor* destProcessor, uint8_t destParam,
     //     uint8_t source, LEAF *leaf, ATOMIC_FLOAT CPPDEREF scalingptr);
     // void tMappingUpdateDest(tMapping* mapping, uint8_t source,

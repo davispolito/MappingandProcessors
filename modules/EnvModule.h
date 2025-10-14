@@ -39,14 +39,14 @@ typedef struct _tEnvModule {
     const float* envTimeTableAddress;
     float envTimeTableSizeMinusOne;
     uint32_t tableSize;
-    tMempool mempool;
+    tMempool* mempool;
 } _tEnvModule;
 
 typedef _tEnvModule* tEnvModule;
 
 //init module
 void tEnvModule_init(void** const env, float* const params, float id, LEAF* const leaf);
-void tEnvModule_initToPool(void** const env, float* const params, float id, tMempool* const mempool);
+void tEnvModule_initToPool(void** const env, float* const params, float id, tMempool** const mempool);
 void tEnvModule_free(void** const env);
 
 //note on action

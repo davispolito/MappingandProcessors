@@ -16,13 +16,13 @@ void tEnvModule_init(void** const env, float* params, float id, LEAF* const leaf
 void tEnvModule_free(void** const env)
 {
     _tEnvModule* EnvModule =static_cast<_tEnvModule *>(*env);
-    tADSRT_free(&EnvModule->theEnv);
+    //tADSRT_free(&EnvModule->theEnv);
     mpool_free((char*)EnvModule, EnvModule->mempool);
 }
 //tick function
 void tEnvModule_tick (tEnvModule const env)
 {
-    env->outputs[0] = tADSRT_tick(env->theEnv);
+    env->outputs[0] = tADSRT_tick(&env->theEnv);
 }
 
 //special noteOnFunction
@@ -32,11 +32,11 @@ void tEnvModule_onNoteOn(tEnvModule const env, float velocity)
     if (velocity > 0.0001f)
     {
         if (env->params[EnvUseVelocity] == 0) envVel = 1.f; // any way to avoid this double branching?
-        tADSRT_on(env->theEnv, envVel);
+        tADSRT_on(&env->theEnv, envVel);
     }
     else
     {
-        tADSRT_off(env->theEnv);
+        tADSRT_off(&env->theEnv);
     }
 }
 
@@ -44,10 +44,10 @@ void tEnvModule_onNoteOn(tEnvModule const env, float velocity)
 // Non-modulatable setters
 void tEnvModule_setExpTableLocation (tEnvModule const env, const float* tableAddress, uint32_t const tableSize)
 {
-    env->theEnv->exp_buff = tableAddress;
-    env->theEnv->buff_size = tableSize;
-    env->theEnv->buff_sizeMinusOne = tableSize - 1;
-    env->theEnv->bufferSizeDividedBySampleRateInMs = env->theEnv->buff_size / (env->theEnv->sampleRate * 0.001f);
+    env->theEnv.exp_buff = tableAddress;
+    env->theEnv.buff_size = tableSize;
+    env->theEnv.buff_sizeMinusOne = tableSize - 1;
+    env->theEnv.bufferSizeDividedBySampleRateInMs = env->theEnv.buff_size / (env->theEnv.sampleRate * 0.001f);
 }
 
 void tEnvModule_setTimeScalingTableLocation (tEnvModule const env, const float* tableAddress, uint32_t const tableSize)
@@ -78,7 +78,7 @@ void tEnvModule_setParameter(tEnvModule const  env, int parameter_id, float inpu
             float const inputFloat = (float)inputInt - input;
             int const nextPos = LEAF_clip(0.0f, inputInt + 1.0f, env->envTimeTableSizeMinusOne);
             float const theValue = LEAF_clip(0.1f, (env->envTimeTableAddress[inputInt] * (1.0f - inputFloat)) + (env->envTimeTableAddress[nextPos] * inputFloat), 10.0f);
-            tADSRT_setAttack(env->theEnv, theValue + 0.001f);
+            tADSRT_setAttack(&env->theEnv, theValue + 0.001f);
             break;
         }
 
@@ -89,13 +89,13 @@ void tEnvModule_setParameter(tEnvModule const  env, int parameter_id, float inpu
             float const inputFloat = (float)inputInt - input;
             int const nextPos = LEAF_clip(0.0f, inputInt + 1.0f, env->envTimeTableSizeMinusOne);
             float const theValue = LEAF_clip(0.1f, (env->envTimeTableAddress[inputInt] * (1.0f - inputFloat)) + (env->envTimeTableAddress[nextPos] * inputFloat), 10.0f);
-            tADSRT_setDecay(env->theEnv, theValue + 0.001f);
+            tADSRT_setDecay(&env->theEnv, theValue + 0.001f);
             break;
         }
 
         case EnvSustain:
         {
-            tADSRT_setSustain(env->theEnv, LEAF_clip(0.0f, input, 1.0));
+            tADSRT_setSustain(&env->theEnv, LEAF_clip(0.0f, input, 1.0));
             break;
         }
 
@@ -106,13 +106,13 @@ void tEnvModule_setParameter(tEnvModule const  env, int parameter_id, float inpu
             float const inputFloat = (float)inputInt - input;
             int const nextPos = LEAF_clip(0.0f, inputInt + 1.0f, env->envTimeTableSizeMinusOne);
             float const theValue = LEAF_clip(0.1f, (env->envTimeTableAddress[inputInt] * (1.0f - inputFloat)) + (env->envTimeTableAddress[nextPos] * inputFloat), 10.0f);
-            tADSRT_setRelease(env->theEnv, theValue + 0.001f);
+            tADSRT_setRelease(&env->theEnv, theValue + 0.001f);
             break;
         }
 
         case EnvLeak:
         {
-            tADSRT_setLeakFactor(env->theEnv,  0.99995f + 0.00005f*(1.f-LEAF_clip(0.0f, input, 1.0)));
+            tADSRT_setLeakFactor(&env->theEnv,  0.99995f + 0.00005f*(1.f-LEAF_clip(0.0f, input, 1.0)));
             break;
         }
 
@@ -140,9 +140,9 @@ void tEnvModule_setParameter(tEnvModule const  env, int parameter_id, float inpu
 }
 
 
-void tEnvModule_initToPool(void** const env, float* const params, float id, tMempool* const mempool)
+void tEnvModule_initToPool(void** const env, float* const params, float id, tMempool** const mempool)
 {
-    _tMempool* m = *mempool;
+    tMempool* m = *mempool;
     _tEnvModule* EnvModule = static_cast<_tEnvModule *>(*env = (_tEnvModule*) mpool_alloc(sizeof(_tEnvModule), m));
 #ifndef __cplusplus
     memcpy(EnvModule->params, params, EnvNumParams);
@@ -150,7 +150,8 @@ void tEnvModule_initToPool(void** const env, float* const params, float id, tMem
     EnvModule->mempool = m;
 
     EnvModule->uniqueID = id;
-    tADSRT_initToPool(&EnvModule->theEnv, 1.0f,1000.0f,1.0f,1000.0f, NULL, 2048,mempool);
+    tADSRT_set(&EnvModule->theEnv, 1.0f,1000.0f,1.0f,1000.0f, NULL, 2048,(*mempool)->leaf);
+
     EnvModule->tick = reinterpret_cast<tTickFuncReturningFloat>(tADSRT_tick);
     EnvModule->setterFunctions[EnvEventWatchFlag] =(tSetter) &tEnvModule_onNoteOn;
 

@@ -12,9 +12,9 @@ void tStringModule_free(void** const mod)
     _tStringModule* module =static_cast<_tStringModule *>(*mod);
     mpool_free((char*)module, module->mempool);
 }
-void tStringModule_initToPool(void** const env, float* const params, float id, tMempool* const mempool)
+void tStringModule_initToPool(void** const env, float* const params, float id, tMempool** const mempool)
 {
-    _tMempool* m = *mempool;
+    tMempool* m = *mempool;
     _tStringModule* module = static_cast<_tStringModule *>(*env = (_tStringModule*) mpool_alloc(sizeof(_tStringModule), m));
     #ifndef __cplusplus
     memcpy(module->params, params, StringNumParams);

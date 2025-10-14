@@ -21,9 +21,9 @@ void tVCAModule_blankFunction (tVCAModule const VCA, float freq)
 
 
 
-void tVCAModule_initToPool(void** const VCA, float* const params, float id, tMempool* const mempool)
+void tVCAModule_initToPool(void** const VCA, float* const params, float id, tMempool** const mempool)
 {
-    _tMempool* m = *mempool;
+    tMempool* m = *mempool;
     _tVCAModule* VCAModule =static_cast<_tVCAModule *> ( *VCA = (_tVCAModule*) mpool_alloc(sizeof(_tVCAModule), m));
 #ifndef __cplusplus
     memcpy(VCAModule->params, params, VCANumParams*sizeof(float));

@@ -38,14 +38,14 @@ typedef struct _tVCAModule {
     float amp;
     float external_input;
 
-    tMempool mempool;
+    tMempool* mempool;
 } _tVCAModule;
 
 typedef _tVCAModule* tVCAModule;
 
 //init module
 void tVCAModule_init(void** const VCA, float* const params, float id, LEAF* const leaf);
-void tVCAModule_initToPool(void** const VCA, float* const params, float id, tMempool* const mempool);
+void tVCAModule_initToPool(void** const VCA, float* const params, float id, tMempool** const mempool);
 void tVCAModule_free(void** const VCA);
 
 // tick

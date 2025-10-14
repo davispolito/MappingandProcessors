@@ -25,9 +25,9 @@ void tMapping_init (tMapping** const mapping, LEAF* const leaf)
 	tMapping_initToPool(mapping, &leaf->mempool);
 }
 
-void tMapping_initToPool (tMapping** const mapping, tMempool* const mp)
+void tMapping_initToPool (tMapping** const mapping, tMempool** const mp)
 {
-    _tMempool* m = *mp;
+    tMempool* m = *mp;
     tMapping* map = *mapping = (tMapping*) mpool_alloc(sizeof(tMapping), m);
     map->mempool = m;
     map->numUsedSources = 0;

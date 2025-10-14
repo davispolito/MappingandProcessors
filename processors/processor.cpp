@@ -16,9 +16,9 @@ void    tProcessor_init (tProcessor** const pr, LEAF* const leaf)
 	tProcessor_initToPool(pr, &leaf->mempool);
 }
 
-void    tProcessor_initToPool   (tProcessor** const pr, tMempool* const mp)
+void    tProcessor_initToPool   (tProcessor** const pr, tMempool** const mp)
 {
-    _tMempool* m = *mp;
+    tMempool* m = *mp;
     tProcessor* p = *pr = (tProcessor*) mpool_alloc(sizeof(tProcessor), m);
     p->mempool = m;
 }

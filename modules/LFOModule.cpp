@@ -20,9 +20,9 @@ void tLFOModule_blankFunction (tLFOModule const lfo, float freq)
 {
     ;
 }
-void tLFOModule_initToPool(void** const lfo, float* const params, float id, tMempool* const mempool, tLookupTable rateTable)
+void tLFOModule_initToPool(void** const lfo, float* const params, float id, tMempool** const mempool, tLookupTable* rateTable)
 {
-    _tMempool* m = *mempool;
+    tMempool* m = *mempool;
     _tLFOModule* LFOModule = static_cast<_tLFOModule*>(*lfo = (_tLFOModule*) mpool_alloc(sizeof(_tLFOModule), m));
     int type = 0;
 #ifndef __cplusplus
@@ -39,7 +39,7 @@ void tLFOModule_initToPool(void** const lfo, float* const params, float id, tMem
     // LFOModule->setterFunctions[LFOType] = (tSetter)(&tLFOModule_blankFunction);
     // LFOModule->setterFunctions[LFORateParam] = (tSetter)(&tLFOModule_setRate);
     if (LFOModule->lfo_type == LFOTypeSineTri) {
-        tSineTriLFO_initToPool((tSineTriLFO*)&LFOModule->theLFO, mempool);
+        tSineTriLFO_initToPool((tSineTriLFO**)&LFOModule->theLFO, mempool);
         // LFOModule->setterFunctions[LFOPhaseParam] = (tSetter)(&tSineTriLFO_setPhase);
         // LFOModule->setterFunctions[LFOShapeParam] = (tSetter)(&tSineTriLFO_setShape);
         LFOModule->freq_set_func = (tSetter)(&tSineTriLFO_setFreq);
@@ -47,7 +47,7 @@ void tLFOModule_initToPool(void** const lfo, float* const params, float id, tMem
     }
     else if (LFOModule->lfo_type == LFOTypeSawSquare) {
 
-        tSawSquareLFO_initToPool((tSawSquareLFO*)&LFOModule->theLFO, mempool);
+        tSawSquareLFO_initToPool((tSawSquareLFO**)&LFOModule->theLFO, mempool);
         // LFOModule->setterFunctions[LFOPhaseParam] = (tSetter)(&tSawSquareLFO_setPhase);
         // LFOModule->setterFunctions[LFOShapeParam] = (tSetter)(&tSawSquareLFO_setShape);
         LFOModule->freq_set_func = (tSetter)(&tSawSquareLFO_setFreq);
@@ -55,7 +55,7 @@ void tLFOModule_initToPool(void** const lfo, float* const params, float id, tMem
     }
     else if (LFOModule->lfo_type == LFOTypeSine) {
 
-        tCycle_initToPool((tCycle*)&LFOModule->theLFO, mempool);
+        tCycle_initToPool((tCycle**)&LFOModule->theLFO, mempool);
         // LFOModule->setterFunctions[LFOPhaseParam] = (tSetter)(&tCycle_setPhase);
         // LFOModule->setterFunctions[LFOShapeParam] = (tSetter)(&tLFOModule_blankFunction);//better way to do this?
         LFOModule->freq_set_func = (tSetter)(&tCycle_setFreq);
@@ -63,7 +63,7 @@ void tLFOModule_initToPool(void** const lfo, float* const params, float id, tMem
     }
     else if (LFOModule->lfo_type == LFOTypeTri) {
 
-        tTriLFO_initToPool((tTriLFO*)&LFOModule->theLFO, mempool);
+        tTriLFO_initToPool((tTriLFO**)&LFOModule->theLFO, mempool);
         // LFOModule->setterFunctions[LFOPhaseParam] = (tSetter)(&tTriLFO_setPhase);
         // LFOModule->setterFunctions[LFOShapeParam] = (tSetter)(&tLFOModule_blankFunction);//better way to do this?
         LFOModule->freq_set_func  = (tSetter)(&tTriLFO_setFreq);
@@ -71,7 +71,7 @@ void tLFOModule_initToPool(void** const lfo, float* const params, float id, tMem
     }
     else if (LFOModule->lfo_type == LFOTypeSaw) {
 
-        tIntPhasor_initToPool((tIntPhasor*)&LFOModule->theLFO, mempool);
+        tIntPhasor_initToPool((tIntPhasor**)&LFOModule->theLFO, mempool);
         // LFOModule->setterFunctions[LFOPhaseParam] = (tSetter)(&tIntPhasor_setPhase);
         // LFOModule->setterFunctions[LFOShapeParam] = (tSetter)(&tLFOModule_blankFunction);//better way to do this?
         LFOModule->freq_set_func = (tSetter)(&tIntPhasor_setFreq);
@@ -79,7 +79,7 @@ void tLFOModule_initToPool(void** const lfo, float* const params, float id, tMem
     }
     else if (LFOModule->lfo_type == LFOTypeSquare) {
 
-        tSquareLFO_initToPool((tSquareLFO*)&LFOModule->theLFO, mempool);
+        tSquareLFO_initToPool((tSquareLFO**)&LFOModule->theLFO, mempool);
         // LFOModule->setterFunctions[LFOPhaseParam] = (tSetter)(&tSquareLFO_setPhase);
         // LFOModule->setterFunctions[LFOShapeParam] = (tSetter)(&tSquareLFO_setPulseWidth);//better way to do this?
         LFOModule->freq_set_func = (tSetter)(&tSquareLFO_setFreq);
@@ -94,22 +94,22 @@ void tLFOModule_free(void** const lfo)
     _tLFOModule* LFOModule = static_cast<_tLFOModule*>(*lfo);
     int type = roundf(CPPDEREF LFOModule->params[LFOType]);
     if (type == LFOTypeSineTri) {
-        tSineTriLFO_free((tSineTriLFO*)LFOModule->theLFO);
+        tSineTriLFO_free((tSineTriLFO**)LFOModule->theLFO);
     }
     else if (type == LFOTypeSawSquare) {
-        tSawSquareLFO_free((tSawSquareLFO*)LFOModule->theLFO);
+        tSawSquareLFO_free((tSawSquareLFO**)LFOModule->theLFO);
     }
     else if (type == LFOTypeSine) {
-        tCycle_free((tCycle*)LFOModule->theLFO);
+        tCycle_free((tCycle**)LFOModule->theLFO);
     }
     else if (type == LFOTypeTri) {
-        tTriLFO_free((tTriLFO*)LFOModule->theLFO);
+        tTriLFO_free((tTriLFO**)LFOModule->theLFO);
     }
     else if (type == LFOTypeSaw) {
-        tIntPhasor_free((tIntPhasor*)LFOModule->theLFO);
+        tIntPhasor_free((tIntPhasor**)LFOModule->theLFO);
     }
     else if (type == LFOTypeSquare) {
-        tSquareLFO_free((tSquareLFO*)LFOModule->theLFO);
+        tSquareLFO_free((tSquareLFO**)LFOModule->theLFO);
     }
     mpool_free((char*)LFOModule, LFOModule->mempool);
 }
@@ -120,27 +120,27 @@ void tLFOModule_tick (tLFOModule const lfo)
         switch (lfo->lfo_type)
         {
             case LFOTypeSineTri:
-                lfo->outputs[0] = tSineTriLFO_tick((tSineTriLFO)lfo->theLFO);
+                lfo->outputs[0] = tSineTriLFO_tick((tSineTriLFO*)lfo->theLFO);
                 break;
 
             case LFOTypeSawSquare:
-                lfo->outputs[0] = tSawSquareLFO_tick((tSawSquareLFO)lfo->theLFO);
+                lfo->outputs[0] = tSawSquareLFO_tick((tSawSquareLFO*)lfo->theLFO);
                 break;
 
             case LFOTypeSine:
-                lfo->outputs[0] = tCycle_tick((tCycle)lfo->theLFO);
+                lfo->outputs[0] = tCycle_tick((tCycle*)lfo->theLFO);
                 break;
 
             case LFOTypeTri:
-                lfo->outputs[0] = tTriLFO_tick((tTriLFO)lfo->theLFO);
+                lfo->outputs[0] = tTriLFO_tick((tTriLFO*)lfo->theLFO);
                 break;
 
             case LFOTypeSaw:
-                lfo->outputs[0] = tIntPhasor_tickBiPolar((tIntPhasor)lfo->theLFO);
+                lfo->outputs[0] = tIntPhasor_tickBiPolar((tIntPhasor*)lfo->theLFO);
                 break;
 
             case LFOTypeSquare:
-                lfo->outputs[0] = tSquareLFO_tick((tSquareLFO)lfo->theLFO);
+                lfo->outputs[0] = tSquareLFO_tick((tSquareLFO*)lfo->theLFO);
                 break;
 
             default:
@@ -249,12 +249,12 @@ void tLFOModule_setParameter(tLFOModule const lfo, LFOParams param_type, float i
             switch (lfo->moduleType)
             {
                 case LFOTypeSineTri: {
-                    tSineTriLFO_setPhase((tSineTriLFO)lfo->theLFO,input);
+                    tSineTriLFO_setPhase((tSineTriLFO*)lfo->theLFO,input);
                     break;
                 }
                  case LFOTypeSquare:
                 {
-                    tSquareLFO_setPulseWidth((tSquareLFO)lfo->theLFO, input);
+                    tSquareLFO_setPulseWidth((tSquareLFO*)lfo->theLFO, input);
                     break;
                 }
                 default:
@@ -268,37 +268,37 @@ void tLFOModule_setParameter(tLFOModule const lfo, LFOParams param_type, float i
             {
                 case LFOTypeSineTri:
                 {
-                    tSineTriLFO_setPhase((tSineTriLFO)lfo->theLFO, input);
+                    tSineTriLFO_setPhase((tSineTriLFO*)lfo->theLFO, input);
                     break;
                 }
 
                 case LFOTypeSawSquare:
                 {
-                    tSawSquareLFO_setPhase((tSawSquareLFO)lfo->theLFO, input);
+                    tSawSquareLFO_setPhase((tSawSquareLFO*)lfo->theLFO, input);
                     break;
                 }
 
                 case LFOTypeSine:
                 {
-                    tCycle_setPhase((tCycle)lfo->theLFO, input);
+                    tCycle_setPhase((tCycle*)lfo->theLFO, input);
                     break;
                 }
 
                 case LFOTypeTri:
                 {
-                    tTriLFO_setPhase((tTriLFO)lfo->theLFO, input);
+                    tTriLFO_setPhase((tTriLFO*)lfo->theLFO, input);
                     break;
                 }
 
                 case LFOTypeSaw:
                 {
-                    tIntPhasor_setPhase((tIntPhasor)lfo->theLFO, input);
+                    tIntPhasor_setPhase((tIntPhasor*)lfo->theLFO, input);
                     break;
                 }
 
                 case LFOTypeSquare:
                 {
-                    tSquareLFO_setPhase((tSquareLFO)lfo->theLFO, input);
+                    tSquareLFO_setPhase((tSquareLFO*)lfo->theLFO, input);
                     break;
                 }
 

@@ -43,16 +43,16 @@ typedef struct _tLFOModule {
     ATOMIC_FLOAT CPPDEREF params[MAX_NUM_PARAMS];
     ATOMIC_FLOAT outputs[1];
 
-    tLookupTable table;
+    tLookupTable* table;
     tFreqSetFunc freq_set_func;
-   tMempool mempool;
+   tMempool* mempool;
 } _tLFOModule;
 
 typedef _tLFOModule* tLFOModule;
 
 //init module
 void tLFOModule_init(void** const lfo, float* const params, float id, LEAF* const leaf);
-void tLFOModule_initToPool(void** const lfo, float* const params, float id, tMempool* const mempool, tLookupTable );
+void tLFOModule_initToPool(void** const lfo, float* const params, float id, tMempool** const mempool, tLookupTable* );
 void tLFOModule_free(void** const lfo);
 
 //note on action

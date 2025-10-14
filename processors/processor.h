@@ -29,7 +29,7 @@ typedef struct Processor
     ATOMIC_FLOAT CPPDEREF * inParameters; //  points to parameter array of the actual object
     ATOMIC_FLOAT* outParameters; // OUT sources for the processors
     ATOMIC_FLOAT* audioInParameters; //audio in params
-    tMempool mempool;
+    tMempool* mempool;
 } tProcessor;
 
 typedef struct ProcessorPreset
@@ -80,7 +80,7 @@ typedef void (*createModuleFunc)(void** const module, float* const params, float
 void    tProcessor_init (tProcessor** const pr, LEAF* const leaf);
 
 
-void    tProcessor_initToPool   (tProcessor** const pr, tMempool* const mp);
+void    tProcessor_initToPool   (tProcessor** const pr, tMempool** const mp);
 
     void tProcessor_free(tProcessor** pr);
 
