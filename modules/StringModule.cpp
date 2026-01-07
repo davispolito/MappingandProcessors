@@ -12,15 +12,15 @@ void tStringModule_free(void** const mod)
     _tStringModule* module =static_cast<_tStringModule *>(*mod);
     mpool_free((char*)module, module->mempool);
 }
-void tStringModule_initToPool(void** const env, float* const params, float id, tMempool** const mempool)
+void tStringModule_initToPool(void** const s, float* const params, float id, tMempool** const mempool)
 {
     tMempool* m = *mempool;
-    _tStringModule* module = static_cast<_tStringModule *>(*env = (_tStringModule*) mpool_alloc(sizeof(_tStringModule), m));
+    _tStringModule* module = static_cast<_tStringModule *>(*s = (_tStringModule*) mpool_alloc(sizeof(_tStringModule), m));
     #ifndef __cplusplus
     memcpy(module->params, params, StringNumParams);
     #endif
     module->mempool = m;
-
+   //can't figure out how to get this module to add itself as a listener of the event emitter... -JS
     tSimpleLivingString3_create (mempool, &module->theString);
     tSimpleLivingString3_init   (m->leaf,
                                  module->theString,
@@ -32,14 +32,27 @@ void tStringModule_initToPool(void** const env, float* const params, float id, t
                                  1.0,
                                  1.0,
                                  0);
-
+    module->setterFunctions[StringEventWatchFlag] =(tSetter) &tStringModule_onNoteOn;
 
 }
 
-void tStringModule_tick(tStringModule const s,float* value)
+void tStringModule_tick(tStringModule const s,float* buffer)
     {
+        buffer[0] = tSimpleLivingString3_tick(s->theString, buffer[0] );
         }
 
+void tStringModule_onNoteOn(tStringModule const s, float velocity)
+{
+    float Vel = velocity;
+    if (velocity > 0.0001f)
+    {
+        tSimpleLivingString3_pluck(s->theString, Vel, 0.6f);
+    }
+    else
+    {
+        ;
+    }
+}
 void tStringModule_processorInit(tStringModule const s, LEAF_NAMESPACE tProcessor* processor)
 {
 
@@ -50,6 +63,7 @@ void tStringModule_processorInit(tStringModule const s, LEAF_NAMESPACE tProcesso
     processor->processorUniqueID = s->uniqueID;
     processor->object = s;
     processor->numSetterFunctions = StringNumParams;
+    processor->setterFunctions[StringEventWatchFlag] =(tSetter) &tStringModule_onNoteOn;
     processor->tick = (tTickFuncReturningVoid)&tStringModule_tick;
     processor->inParameters = s->params;
     processor->outParameters = s->outputs;

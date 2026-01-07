@@ -4,6 +4,7 @@
 #include "event_emitter.h"
 #include "defs.h"
 #include "EnvModule.h"
+#include "StringModule.h"
 
 void callNoteOn(void* const module,  float velocity)
 {
@@ -43,7 +44,7 @@ void callNoteOn(void* const module,  float velocity)
             case ModuleTypeStringModule:
             {
                 // tStringModule* str = (tStringModule*)module;
-                // tStringModule_onNoteOn(str, velocity);
+                 tStringModule_onNoteOn((tStringModule)module, velocity);
                 break;
             }
             case ModuleTypeVCAModule:

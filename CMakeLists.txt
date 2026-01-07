@@ -29,6 +29,7 @@ add_library(procUtils
         processors/midi_sysex.cpp
         processors/funcmaps.cpp
         processors/event_emitter.cpp
+        modules/SoftClipModule.cpp
 )
 
 # Include directories for procUtils
