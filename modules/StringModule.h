@@ -5,8 +5,8 @@
 #ifndef STRINGMODULE_H
 #define STRINGMODULE_H
 #include "defs.h"
-#include "Inc/leaf-mempool.h"
-#include "Inc/leaf-physical.h"
+#include "leaf-mempool.h"
+#include "leaf-physical.h"
 #include "leaf.h"
 #include "processor.h"
 

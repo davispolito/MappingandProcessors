@@ -10,7 +10,8 @@ void tLFOModule_init(void** const lfo, float* params, float id, LEAF* const leaf
 {
     if(leaf->lfoRateTable == NULL)
     {
-        tLookupTable_init(&leaf->lfoRateTable, 0.3f, 30.f, 2.f,2048,leaf);
+        tLookupTable_create(&leaf->mempool, &leaf->lfoRateTable);
+        tLookupTable_init(leaf,leaf->lfoRateTable, 0.3f, 30.f, 2.f,2048);
        // LEAF_generate_table_skew_non_sym(skewTableLFORate, 0.0f, 30.0f, 2.0f, 2048);
     }
     tLFOModule_initToPool(lfo, params, id,  &leaf->mempool, leaf->lfoRateTable);
@@ -38,53 +39,55 @@ void tLFOModule_initToPool(void** const lfo, float* const params, float id, tMem
     // LFOModule->setterFunctions[LFOEventWatchFlag] = (tSetter)(&tLFOModule_blankFunction);
     // LFOModule->setterFunctions[LFOType] = (tSetter)(&tLFOModule_blankFunction);
     // LFOModule->setterFunctions[LFORateParam] = (tSetter)(&tLFOModule_setRate);
-    if (LFOModule->lfo_type == LFOTypeSineTri) {
-        tSineTriLFO_initToPool((tSineTriLFO**)&LFOModule->theLFO, mempool);
-        // LFOModule->setterFunctions[LFOPhaseParam] = (tSetter)(&tSineTriLFO_setPhase);
-        // LFOModule->setterFunctions[LFOShapeParam] = (tSetter)(&tSineTriLFO_setShape);
+    if (LFOModule->lfo_type == LFOTypeSineTri)
+    {
+        tSineTriLFO_create (mempool, (tSineTriLFO**)&LFOModule->theLFO);
+        tSineTriLFO_init   (m->leaf, (tSineTriLFO*)LFOModule->theLFO);
+
         LFOModule->freq_set_func = (tSetter)(&tSineTriLFO_setFreq);
-        LFOModule->tick = (tTickFuncReturningFloat)(&tSineTriLFO_tick);
+        LFOModule->tick          = (tTickFuncReturningFloat)(&tSineTriLFO_tick);
     }
-    else if (LFOModule->lfo_type == LFOTypeSawSquare) {
+    else if (LFOModule->lfo_type == LFOTypeSawSquare)
+    {
+        tSawSquareLFO_create (mempool, (tSawSquareLFO**)&LFOModule->theLFO);
+        tSawSquareLFO_init   (m->leaf, (tSawSquareLFO*)LFOModule->theLFO);
 
-        tSawSquareLFO_initToPool((tSawSquareLFO**)&LFOModule->theLFO, mempool);
-        // LFOModule->setterFunctions[LFOPhaseParam] = (tSetter)(&tSawSquareLFO_setPhase);
-        // LFOModule->setterFunctions[LFOShapeParam] = (tSetter)(&tSawSquareLFO_setShape);
         LFOModule->freq_set_func = (tSetter)(&tSawSquareLFO_setFreq);
-        LFOModule->tick = reinterpret_cast<tTickFuncReturningFloat>(&tSawSquareLFO_tick);
+        LFOModule->tick          = (tTickFuncReturningFloat)(&tSawSquareLFO_tick);
     }
-    else if (LFOModule->lfo_type == LFOTypeSine) {
+    else if (LFOModule->lfo_type == LFOTypeSine)
+    {
+        tCycle_create (mempool, (tCycle**)&LFOModule->theLFO);
+        tCycle_init   (m->leaf, (tCycle*)LFOModule->theLFO);
 
-        tCycle_initToPool((tCycle**)&LFOModule->theLFO, mempool);
-        // LFOModule->setterFunctions[LFOPhaseParam] = (tSetter)(&tCycle_setPhase);
-        // LFOModule->setterFunctions[LFOShapeParam] = (tSetter)(&tLFOModule_blankFunction);//better way to do this?
         LFOModule->freq_set_func = (tSetter)(&tCycle_setFreq);
-        LFOModule->tick = reinterpret_cast<tTickFuncReturningFloat>(&tCycle_tick);
+        LFOModule->tick          = (tTickFuncReturningFloat)(&tCycle_tick);
     }
-    else if (LFOModule->lfo_type == LFOTypeTri) {
+    else if (LFOModule->lfo_type == LFOTypeTri)
+    {
+        tTriLFO_create (mempool, (tTriLFO**)&LFOModule->theLFO);
+        tTriLFO_init   (m->leaf, (tTriLFO*)LFOModule->theLFO);
 
-        tTriLFO_initToPool((tTriLFO**)&LFOModule->theLFO, mempool);
-        // LFOModule->setterFunctions[LFOPhaseParam] = (tSetter)(&tTriLFO_setPhase);
-        // LFOModule->setterFunctions[LFOShapeParam] = (tSetter)(&tLFOModule_blankFunction);//better way to do this?
-        LFOModule->freq_set_func  = (tSetter)(&tTriLFO_setFreq);
-        LFOModule->tick = reinterpret_cast<tTickFuncReturningFloat>(&tTriLFO_tick);
+        LFOModule->freq_set_func = (tSetter)(&tTriLFO_setFreq);
+        LFOModule->tick          = (tTickFuncReturningFloat)(&tTriLFO_tick);
     }
-    else if (LFOModule->lfo_type == LFOTypeSaw) {
+    else if (LFOModule->lfo_type == LFOTypeSaw)
+    {
+        tIntPhasor_create (mempool, (tIntPhasor**)&LFOModule->theLFO);
+        tIntPhasor_init   (m->leaf, (tIntPhasor*)LFOModule->theLFO);
 
-        tIntPhasor_initToPool((tIntPhasor**)&LFOModule->theLFO, mempool);
-        // LFOModule->setterFunctions[LFOPhaseParam] = (tSetter)(&tIntPhasor_setPhase);
-        // LFOModule->setterFunctions[LFOShapeParam] = (tSetter)(&tLFOModule_blankFunction);//better way to do this?
         LFOModule->freq_set_func = (tSetter)(&tIntPhasor_setFreq);
-        LFOModule->tick = reinterpret_cast<tTickFuncReturningFloat>(&tIntPhasor_tickBiPolar);
+        LFOModule->tick          = (tTickFuncReturningFloat)(&tIntPhasor_tickBiPolar);
     }
-    else if (LFOModule->lfo_type == LFOTypeSquare) {
+    else if (LFOModule->lfo_type == LFOTypeSquare)
+    {
+        tSquareLFO_create (mempool, (tSquareLFO**)&LFOModule->theLFO);
+        tSquareLFO_init   (m->leaf, (tSquareLFO*)LFOModule->theLFO);
 
-        tSquareLFO_initToPool((tSquareLFO**)&LFOModule->theLFO, mempool);
-        // LFOModule->setterFunctions[LFOPhaseParam] = (tSetter)(&tSquareLFO_setPhase);
-        // LFOModule->setterFunctions[LFOShapeParam] = (tSetter)(&tSquareLFO_setPulseWidth);//better way to do this?
         LFOModule->freq_set_func = (tSetter)(&tSquareLFO_setFreq);
-        LFOModule->tick = reinterpret_cast<tTickFuncReturningFloat >(&tSquareLFO_tick);
+        LFOModule->tick          = (tTickFuncReturningFloat)(&tSquareLFO_tick);
     }
+
     LFOModule->moduleType = ModuleTypeLFOModule;
 }
 

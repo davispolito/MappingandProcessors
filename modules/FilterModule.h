@@ -6,8 +6,8 @@
 
 #include "leaf.h"
 #include "defs.h"
-#include "Inc/leaf-mempool.h"
-#include "Inc/leaf-filters.h"
+#include "leaf-mempool.h"
+#include "leaf-filters.h"
 #include "processor.h"
 
 

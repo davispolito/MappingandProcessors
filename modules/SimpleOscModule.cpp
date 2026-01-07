@@ -5,7 +5,6 @@
 #include "SimpleOscModule.h"
 
 #include <assert.h>
-
 void tOscModule_init(void** const osc, float* params, float id, LEAF* const leaf)
 {
     tOscModule_initToPool(osc, params, id, &leaf->mempool);
@@ -48,29 +47,42 @@ void tOscModule_setType (tOscModule const osc, float typefloat)
     //set new oscillator type
     type = round(typefloat * (float)OscNumTypes);
     //create new oscillator object
-    switch (type)
-    {
+	switch (type)
+	{
 		case OscTypeSawSquare:
-			tPBSawSquare_initToPool((tPBSawSquare**)&osc->theOsc, &osc->mempool);
+			tPBSawSquare_create (&osc->mempool, (tPBSawSquare**)&osc->theOsc);
+			tPBSawSquare_init   (osc->mempool->leaf, (tPBSawSquare*)osc->theOsc);
 			break;
+
 		case OscTypeSineTri:
-			tPBSineTriangle_initToPool((tPBSineTriangle**)&osc->theOsc, &osc->mempool);
+			tPBSineTriangle_create (&osc->mempool, (tPBSineTriangle**)&osc->theOsc);
+			tPBSineTriangle_init   (osc->mempool->leaf, (tPBSineTriangle*)osc->theOsc);
 			break;
+
 		case OscTypeSaw:
-			tPBSaw_initToPool((tPBSaw**)&osc->theOsc, &osc->mempool);
+			tPBSaw_create (&osc->mempool, (tPBSaw**)&osc->theOsc);
+			tPBSaw_init   (osc->mempool->leaf, (tPBSaw*)osc->theOsc);
 			break;
+
 		case OscTypePulse:
-			tPBPulse_initToPool((tPBPulse**)&osc->theOsc, &osc->mempool);
+			tPBPulse_create (&osc->mempool, (tPBPulse**)&osc->theOsc);
+			tPBPulse_init   (osc->mempool->leaf, (tPBPulse*)osc->theOsc);
 			break;
+
 		case OscTypeSine:
-			tCycle_initToPool((tCycle**)&osc->theOsc, &osc->mempool);
+			tCycle_create (&osc->mempool, (tCycle**)&osc->theOsc);
+			tCycle_init   (osc->mempool->leaf, (tCycle*)osc->theOsc);
 			break;
+
 		case OscTypeTri:
-			tPBTriangle_initToPool((tPBTriangle**)&osc->theOsc, &osc->mempool);
+			tPBTriangle_create (&osc->mempool, (tPBTriangle**)&osc->theOsc);
+			tPBTriangle_init   (osc->mempool->leaf, (tPBTriangle*)osc->theOsc);
 			break;
+
 		default:
 			break;
-    }
+	}
+
     osc->osctype = type;
 }
 void tOscModule_setParameter(tOscModule const osc, OscParams param_type,float input)
@@ -167,29 +179,41 @@ OscModule->pitchSmoother.dest = val;
 	//smooth->baseFactor = factor;
 OscModule->pitchSmoother.factor = factor;
 	OscModule->pitchSmoother.oneminusfactor = 1.0f - factor;
-    switch (type)
-    {
+	switch (type)
+	{
 		case OscTypeSawSquare:
-			tPBSawSquare_initToPool((tPBSawSquare**)&OscModule->theOsc, mempool);
+			tPBSawSquare_create (&OscModule->mempool, (tPBSawSquare**)&OscModule->theOsc);
+			tPBSawSquare_init   (OscModule->mempool->leaf, (tPBSawSquare*)OscModule->theOsc);
 			break;
+
 		case OscTypeSineTri:
-			tPBSineTriangle_initToPool((tPBSineTriangle**)&OscModule->theOsc, mempool);
+			tPBSineTriangle_create (&OscModule->mempool, (tPBSineTriangle**)&OscModule->theOsc);
+			tPBSineTriangle_init   (OscModule->mempool->leaf, (tPBSineTriangle*)OscModule->theOsc);
 			break;
+
 		case OscTypeSaw:
-			tPBSaw_initToPool((tPBSaw**)&OscModule->theOsc, mempool);
+			tPBSaw_create (&OscModule->mempool, (tPBSaw**)&OscModule->theOsc);
+			tPBSaw_init   (OscModule->mempool->leaf, (tPBSaw*)OscModule->theOsc);
 			break;
+
 		case OscTypePulse:
-			tPBPulse_initToPool((tPBPulse**)&OscModule->theOsc, mempool);
+			tPBPulse_create (&OscModule->mempool, (tPBPulse**)&OscModule->theOsc);
+			tPBPulse_init   (OscModule->mempool->leaf, (tPBPulse*)OscModule->theOsc);
 			break;
+
 		case OscTypeSine:
-			tCycle_initToPool((tCycle**)&OscModule->theOsc, mempool);
+			tCycle_create (&OscModule->mempool, (tCycle**)&OscModule->theOsc);
+			tCycle_init   (OscModule->mempool->leaf, (tCycle*)OscModule->theOsc);
 			break;
+
 		case OscTypeTri:
-			tPBTriangle_initToPool((tPBTriangle**)&OscModule->theOsc, mempool);
+			tPBTriangle_create (&OscModule->mempool, (tPBTriangle**)&OscModule->theOsc);
+			tPBTriangle_init   (OscModule->mempool->leaf, (tPBTriangle*)OscModule->theOsc);
 			break;
+
 		default:
 			break;
-    }
+	}
 
     OscModule->moduleType = ModuleTypeOscModule;
 #ifndef __cplusplus

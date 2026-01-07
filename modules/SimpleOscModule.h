@@ -7,10 +7,10 @@
 #include "leaf.h"
 #include "defs.h"
 // #include "processor.h"
-#include "Inc/leaf-mempool.h"
-#include "Inc/leaf-oscillators.h"
+#include "leaf-mempool.h"
+#include "leaf-oscillators.h"
 #include "processor.h"
-
+#include "leaf-envelopes.h"
 typedef enum {
     OscEventWatchFlag,
     OscMidiPitch,

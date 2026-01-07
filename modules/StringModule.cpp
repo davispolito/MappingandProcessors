@@ -21,9 +21,18 @@ void tStringModule_initToPool(void** const env, float* const params, float id, t
     #endif
     module->mempool = m;
 
-    tSimpleLivingString3_initToPool(&module->theString, 1,440.f, 440.0,
-                                                 1.0, 1.0,1.0,1.0,
-                                                 0,mempool);
+    tSimpleLivingString3_create (mempool, &module->theString);
+    tSimpleLivingString3_init   (m->leaf,
+                                 module->theString,
+                                 1,
+                                 440.f,
+                                 440.0,
+                                 1.0,
+                                 1.0,
+                                 1.0,
+                                 1.0,
+                                 0);
+
 
 }
 

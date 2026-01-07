@@ -12,7 +12,8 @@
 void tFiltModule_init(void** const filt, float* params, float id, LEAF* const leaf) {
 	if(leaf->resTable == NULL)
 		{
-		tLookupTable_init(&leaf->resTable,  0.0f, 10.0f, 0.5f, 2048,leaf);
+		tLookupTable_create(&leaf->mempool,&leaf->resTable);
+		tLookupTable_init(leaf, leaf->resTable,  0.0f, 10.0f, 0.5f, 2048);
 	}
     tFiltModule_initToPool(filt, params, id, &leaf->mempool, leaf->resTable);
 }
@@ -141,31 +142,56 @@ void tFiltModule_initToPool(void** const filt, float* const params, float id, tM
     FiltModule->sr = m->leaf->sampleRate;
 	FiltModule->table = resTable;
     if (type == FiltTypeLowpass) {
-        tSVF_initToPool((tSVF**)&FiltModule->theFilt, SVFTypeLowpass,10000.0f, 0.5f, mempool);
+        tSVF_create(mempool, (tSVF**)&FiltModule->theFilt);
+    	tSVF_init(m->leaf,(tSVF*)FiltModule->theFilt, SVFTypeLowpass,10000.0f, 0.5f);
     }
-    else if (type == FiltTypeHighpass) {
-        tSVF_initToPool((tSVF**)&FiltModule->theFilt, SVFTypeHighpass,100.0f, 0.5f, mempool);
+    else if (type == FiltTypeHighpass)
+    {
+    	tSVF_create (mempool, (tSVF**)&FiltModule->theFilt);
+    	tSVF_init   (m->leaf, (tSVF*)FiltModule->theFilt,
+					 SVFTypeHighpass, 100.0f, 0.5f);
     }
-    else if (type == FiltTypeBandpass) {
-        tSVF_initToPool((tSVF**)&FiltModule->theFilt, SVFTypeBandpass,100.0f, 0.5f, mempool);
+    else if (type == FiltTypeBandpass)
+    {
+    	tSVF_create (mempool, (tSVF**)&FiltModule->theFilt);
+    	tSVF_init   (m->leaf, (tSVF*)FiltModule->theFilt,
+					 SVFTypeBandpass, 100.0f, 0.5f);
     }
-    else if (type == FiltTypeDiodeLowpass) {
-        tDiodeFilter_initToPool((tDiodeFilter**)&FiltModule->theFilt, 10000.0f, 0.5f, mempool);
+    else if (type == FiltTypeDiodeLowpass)
+    {
+    	tDiodeFilter_create (mempool, (tDiodeFilter**)&FiltModule->theFilt);
+    	tDiodeFilter_init   (m->leaf, (tDiodeFilter*)FiltModule->theFilt,
+							 10000.0f, 0.5f);
     }
-    else if (type == FiltTypePeak) {
-        tVZFilterBell_initToPool((tVZFilterBell**)&FiltModule->theFilt, 100.0f, 0.5f, 1.0f, mempool);
+    else if (type == FiltTypePeak)
+    {
+    	tVZFilterBell_create (mempool, (tVZFilterBell**)&FiltModule->theFilt);
+    	tVZFilterBell_init   (m->leaf, (tVZFilterBell*)FiltModule->theFilt,
+							  100.0f, 0.5f, 1.0f);
     }
-    else if (type == FiltTypeHighShelf) {
-        tVZFilterHS_initToPool((tVZFilterHS**)&FiltModule->theFilt, 100.0f, 0.5f, 1.0f, mempool);
+    else if (type == FiltTypeHighShelf)
+    {
+    	tVZFilterHS_create (mempool, (tVZFilterHS**)&FiltModule->theFilt);
+    	tVZFilterHS_init   (m->leaf, (tVZFilterHS*)FiltModule->theFilt,
+							100.0f, 0.5f, 1.0f);
     }
-    else if (type == FiltTypeLowShelf) {
-        tVZFilterLS_initToPool((tVZFilterLS**)&FiltModule->theFilt, 100.0f, 0.5f, 1.0f, mempool);
+    else if (type == FiltTypeLowShelf)
+    {
+    	tVZFilterLS_create (mempool, (tVZFilterLS**)&FiltModule->theFilt);
+    	tVZFilterLS_init   (m->leaf, (tVZFilterLS*)FiltModule->theFilt,
+							100.0f, 0.5f, 1.0f);
     }
-    else if (type == FiltTypeNotch) {
-        tVZFilterBR_initToPool((tVZFilterBR**)&FiltModule->theFilt, 100.0f, 0.5f, mempool);
+    else if (type == FiltTypeNotch)
+    {
+    	tVZFilterBR_create (mempool, (tVZFilterBR**)&FiltModule->theFilt);
+    	tVZFilterBR_init   (m->leaf, (tVZFilterBR*)FiltModule->theFilt,
+							100.0f, 0.5f);
     }
-    else if (type == FiltTypeLadderLowpass) {
-        tLadderFilter_initToPool((tLadderFilter**)&FiltModule->theFilt, 100.0f, 0.5f, mempool);
+    else if (type == FiltTypeLadderLowpass)
+    {
+    	tLadderFilter_create (mempool, (tLadderFilter**)&FiltModule->theFilt);
+    	tLadderFilter_init   (m->leaf, (tLadderFilter*)FiltModule->theFilt,
+							  100.0f, 0.5f);
     }
     FiltModule->moduleType = ModuleTypeFilterModule;
 

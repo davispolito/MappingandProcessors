@@ -7,8 +7,8 @@
 #include "leaf.h"
 #include "defs.h"
 // #include "processor.h"
-#include "Inc/leaf-mempool.h"
-#include "Inc/leaf-envelopes.h"
+#include "leaf-mempool.h"
+#include "leaf-envelopes.h"
 #include "processor.h"
 
 
