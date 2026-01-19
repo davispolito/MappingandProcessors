@@ -16,7 +16,6 @@ void tEnvModule_init(void** const env, float* params, float id, LEAF* const leaf
 void tEnvModule_free(void** const env)
 {
     _tEnvModule* EnvModule =static_cast<_tEnvModule *>(*env);
-    //tADSRT_free(&EnvModule->theEnv);
     mpool_free((char*)EnvModule, EnvModule->mempool);
 }
 //tick function

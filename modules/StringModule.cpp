@@ -113,6 +113,7 @@ void tStringModule_setParameter(tStringModule const s, StringModelParams param, 
             break;
 
         case StringPluckPosition:
+            s->pluckPosition = input;
             // s->theString->pluckPosition = input;
             break;
 
@@ -120,4 +121,7 @@ void tStringModule_setParameter(tStringModule const s, StringModelParams param, 
             // unknown param, do nothing
             break;
     }
+}
+void tStringModule_onNoteOn(tStringModule const s, float vel) {
+    tSimpleLivingString3_pluck(s->theString,vel,s->pluckPosition);
 }

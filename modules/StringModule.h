@@ -38,7 +38,9 @@ typedef struct _tStringModule {
     tTickFuncReturningFloat tick; // The object's tick function
     ATOMIC_FLOAT CPPDEREF params[MAX_NUM_PARAMS];
     ATOMIC_FLOAT outputs[1];
+    float pluckPosition;
     tMempool* mempool;
+
 } _tStringModule;
 
 typedef _tStringModule* tStringModule;
@@ -53,5 +55,6 @@ void tStringModule_setParameter(tStringModule const s, StringModelParams param, 
 
 
 void tStringModule_processorInit(tStringModule const filt, LEAF_NAMESPACE tProcessor* processor);
+void tStringModule_onNoteOn(tStringModule const env, float vel);
 
 #endif //STRINGMODULE_H

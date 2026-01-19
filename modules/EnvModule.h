@@ -13,7 +13,7 @@
 
 
 typedef enum {
-    EnvEventWatchFlag,
+    EnvEventWatchFlag, //all of them need this
     EnvAttack,
     EnvDecay,
     EnvSustain,
@@ -22,13 +22,15 @@ typedef enum {
     EnvShapeAttack,
     EnvShapeRelease,
     EnvUseVelocity,
-    EnvNumParams
+    EnvNumParams //all of them need this
 } EnvParams;
 
 
 
 typedef struct _tEnvModule {
+    //start boilerplate  - processor represents all of these///
     uint32_t moduleType;
+    //if its a combo/multi object put them all here
     tADSRT theEnv;
 
     uint32_t uniqueID;
@@ -36,9 +38,12 @@ typedef struct _tEnvModule {
     tSetter setterFunctions[MAX_NUM_PARAMS]; // Array containing setter functions
     ATOMIC_FLOAT CPPDEREF params[MAX_NUM_PARAMS];
     ATOMIC_FLOAT outputs[1];
+    //end boilerplate  - processor represents all of these///
+    //specific other variables
     const float* envTimeTableAddress;
     float envTimeTableSizeMinusOne;
     uint32_t tableSize;
+    //mempool
     tMempool* mempool;
 } _tEnvModule;
 
@@ -53,8 +58,8 @@ void tEnvModule_free(void** const env);
 void tEnvModule_onNoteOn(tEnvModule const env, float vel);
 
 // Modulatable setters
-// void tEnvModule_setRate (tEnvModule const env, float rate);
 void tEnvModule_setParameter(tEnvModule const env, int parameter_id, float input);
+
 // Non-modulatable setters
 void tEnvModule_setRateTableLocation (tEnvModule const env, float* tableAddress);
 void tEnvModule_setSampleRate (tEnvModule const env, float sr);
