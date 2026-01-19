@@ -14,7 +14,6 @@
 // #include "processor.h"
 #include "leaf-mempool.h"
 #include "leaf-filters.h"
-#include "processor.h"
 
 
 
@@ -30,13 +29,7 @@ typedef enum {
 
 
 typedef struct _tSoftClipModule {
-    uint32_t moduleType;
-    uint32_t uniqueID;
-    tTickFuncReturningFloat tick; // The object's tick function
-    tSetter setterFunctions[MAX_NUM_PARAMS]; // Array containing setter functions
-    ATOMIC_FLOAT CPPDEREF params[MAX_NUM_PARAMS];
-    ATOMIC_FLOAT outputs[1];
-    ATOMIC_FLOAT inputs[1];
+    ModuleHeader header;
     float shapeDivider;
     float inputGain;
     float offset;
@@ -58,10 +51,6 @@ void tSoftClipModule_tick (tSoftClipModule const c, float*);
 // void tEnvModule_setRate (tEnvModule const env, float rate);
 void tSoftClipModule_setParameter(tSoftClipModule const c, int parameter_id, float input);
 // Non-modulatable setters
-
-
-//init processors
-void tSoftClipModule_processorInit(tSoftClipModule const c, LEAF_NAMESPACE  tProcessor* processor);
 
 
 

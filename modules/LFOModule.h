@@ -11,7 +11,6 @@
 #include "leaf-mempool.h"
 #include "leaf-oscillators.h"
 
-#include "processor.h"
 typedef void (*tFreqSetFunc)(void*, float);
 typedef enum {
     LFOEventWatchFlag,
@@ -33,15 +32,12 @@ typedef enum {
 } LFOTypes;
 
 typedef struct _tLFOModule {
-    uint32_t moduleType;
+    ModuleHeader header;
    void* theLFO;
     uint32_t lfo_type;
-   uint32_t uniqueID;
-    tTickFuncReturningFloat tick; // The object's tick function
+
     // tSetter setterFunctions[MAX_NUM_PARAMS]; // Array containing setter functions
 
-    ATOMIC_FLOAT CPPDEREF params[MAX_NUM_PARAMS];
-    ATOMIC_FLOAT outputs[1];
 
     tLookupTable* table;
     tFreqSetFunc freq_set_func;
@@ -66,8 +62,6 @@ void tLFOModule_setParameter(tLFOModule const, LFOParams param_type, float input
 // Non-modulatable setters
 //void tLFOModule_setRateTableLocationAndSize (tLFOModule const lfo, float* tableAddress, uint32_t size);
 void tLFOModule_setSampleRate (tLFOModule const lfo, float sr);
-
-void tLFOModule_processorInit(tLFOModule const lfo, LEAF_NAMESPACE tProcessor* processor);
 
 
 

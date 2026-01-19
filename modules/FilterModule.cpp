@@ -193,7 +193,7 @@ void tFiltModule_initToPool(void** const filt, float* const params, float id, tM
     	tLadderFilter_init   (m->leaf, (tLadderFilter*)FiltModule->theFilt,
 							  100.0f, 0.5f);
     }
-    FiltModule->moduleType = ModuleTypeFilterModule;
+    FiltModule->headermoduleType = ModuleTypeFilterModule;
 
 #ifndef __cplusplus
     for (int i = 0; i < FiltNumParams; i++)

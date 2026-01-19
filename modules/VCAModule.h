@@ -6,7 +6,6 @@
 
 #include "leaf.h"
 #include "defs.h"
-#include "processor.h"
 #include "leaf-mempool.h"
 
 
@@ -24,17 +23,9 @@ typedef enum {
 
 
 typedef struct _tVCAModule {
-    uint32_t moduleType;
+    ModuleHeader header;
     void* theVCA;
 
-    uint32_t uniqueID;
-    tTickFuncFloatInReturningFloat tick; // The object's tick function
-
-    tSetter setterFunctions[MAX_NUM_PARAMS]; // Array containing setter functions
-
-    ATOMIC_FLOAT CPPDEREF params[MAX_NUM_PARAMS];
-    ATOMIC_FLOAT outputs[1];
-    ATOMIC_FLOAT inputs[1];
     float amp;
     float external_input;
 
@@ -55,8 +46,6 @@ void tVCAModule_setAudio(tVCAModule const VCA, float audio);
 void tVCAModule_setGain(tVCAModule const VCA, float gain);
 
 // Non-modulatable setters
-//init processors
-void tVCAModule_processorInit(tVCAModule const VCA, LEAF_NAMESPACE tProcessor* processor);
 
 
 

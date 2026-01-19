@@ -94,29 +94,11 @@ void tSoftClipModule_initToPool(void** const c, float* const params, float id, t
     SoftClipModule->offset = 0.0f;
     SoftClipModule->shapeDivider = 1.0f;
 
-    SoftClipModule->uniqueID = id;
+    SoftClipModule->header.uniqueID = id;
 
 
 
-    SoftClipModule->moduleType = ModuleTypeSoftClipModule;
+    SoftClipModule->header.moduleType = ModuleTypeSoftClipModule;
 }
 
-
-
-void tSoftClipModule_processorInit(tSoftClipModule const c, leaf::tProcessor* processor)
-{
-    // Checks that arguments are valid
-    assert (c != NULL);
-    assert (processor != NULL);
-
-    processor->processorUniqueID = c->uniqueID;
-    processor->object = c;
-    processor->numSetterFunctions = SoftClipNumParams;
-    processor->tick = reinterpret_cast<tTickFuncReturningVoid>(tSoftClipModule_tick);
-
-
-    processor->inParameters = c->params;
-    processor->outParameters = c->outputs;
-    processor->processorTypeID = ModuleTypeSoftClipModule;
-}
 

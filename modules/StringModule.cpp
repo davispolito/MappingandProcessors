@@ -32,7 +32,7 @@ void tStringModule_initToPool(void** const s, float* const params, float id, tMe
                                  1.0,
                                  1.0,
                                  0);
-    module->setterFunctions[StringEventWatchFlag] =(tSetter) &tStringModule_onNoteOn;
+    module->header.setterFunctions[StringEventWatchFlag] =(tSetter) &tStringModule_onNoteOn;
 
 }
 
@@ -53,22 +53,6 @@ void tStringModule_onNoteOn(tStringModule const s, float velocity)
         ;
     }
 }
-void tStringModule_processorInit(tStringModule const s, LEAF_NAMESPACE tProcessor* processor)
-{
-
-    // Checks that arguments are valid
-    // assert(s != NULL);
-    //assert(processor != NULL);
-
-    processor->processorUniqueID = s->uniqueID;
-    processor->object = s;
-    processor->numSetterFunctions = StringNumParams;
-    processor->setterFunctions[StringEventWatchFlag] =(tSetter) &tStringModule_onNoteOn;
-    processor->tick = (tTickFuncReturningVoid)&tStringModule_tick;
-    processor->inParameters = s->params;
-    processor->outParameters = s->outputs;
-    processor->processorTypeID = ModuleTypeStringModule;
-}
 void tStringModule_setParameter(tStringModule const s, StringModelParams param, float input)
 {
     switch (param)
@@ -78,7 +62,7 @@ void tStringModule_setParameter(tStringModule const s, StringModelParams param, 
             break;
 
         case StringOversample:
-            *s->params[StringOversample] = input; // store directly or implement oversample logic
+            *s->header.params[StringOversample] = input; // store directly or implement oversample logic
             break;
 
         case StringFreq:
@@ -136,6 +120,4 @@ void tStringModule_setParameter(tStringModule const s, StringModelParams param, 
             break;
     }
 }
-void tStringModule_onNoteOn(tStringModule const s, float vel) {
-    tSimpleLivingString3_pluck(s->theString,vel,s->pluckPosition);
-}
+

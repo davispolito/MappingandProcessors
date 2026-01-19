@@ -29,16 +29,16 @@ void tVCAModule_initToPool(void** const VCA, float* const params, float id, tMem
     memcpy(VCAModule->params, params, VCANumParams*sizeof(float));
 
 #endif
-    VCAModule->uniqueID = id;
+    VCAModule->header.uniqueID = id;
     //CPPDEREF VCAModule->params[VCAAudioInput] = 0.0f;
     int type = 0.0f;//roundf(VCAModule->params[VCAType]);
     VCAModule->mempool = m;
     VCAModule->amp = 1.0f;
-    VCAModule->tick = nullptr;//&tVCAModule_tick;
-    VCAModule->moduleType = ModuleTypeVCAModule;
+    VCAModule->header.tick = nullptr;//&tVCAModule_tick;
+    VCAModule->header.moduleType = ModuleTypeVCAModule;
     VCAModule->external_input = 0;
-    VCAModule->setterFunctions[VCAGain] = (tSetter)&(*tVCAModule_setGain);
-    VCAModule->setterFunctions[VCAAudioInput] = (tSetter)&(*tVCAModule_setAudio);
+    VCAModule->header.setterFunctions[VCAGain] = (tSetter)&(*tVCAModule_setGain);
+    VCAModule->header.setterFunctions[VCAAudioInput] = (tSetter)&(*tVCAModule_setAudio);
 
 }
 
@@ -59,7 +59,7 @@ void tVCAModule_setGain(tVCAModule const VCA, float gain) {
 // tick function
 void tVCAModule_tick (tVCAModule const VCA, float* buffer)
 {
-    buffer[0] = VCA->outputs[0] = (*buffer   + VCA->external_input)*VCA->amp;
+    buffer[0] = VCA->header.outputs[0] = (*buffer   + VCA->external_input)*VCA->amp;
 }
 
 // Modulatable setters
@@ -70,35 +70,3 @@ void tVCAModule_tick (tVCAModule const VCA, float* buffer)
 // Non-modulatable setters
 
 //be sure to set the tables before initing the processor
-void tVCAModule_processorInit(tVCAModule const VCA, leaf::tProcessor* const processor)
-{
-    // Checks that arguments are valid
-	if (VCA == NULL)
-	{
-		return;
-	}
-	if (processor == NULL)
-	{
-		return;
-	}
-
-    processor->processorUniqueID = VCA->uniqueID;
-    processor->object = VCA;
-    processor->numSetterFunctions = VCANumParams;
-    processor->tick = (tTickFuncReturningVoid ) &tVCAModule_tick;
-
-    // processor->setterFunctions[VCAGain] = (tSetter)&(*VCA->setterFunctions[VCAGain]);
-    // processor->setterFunctions[VCAAudioInput] = (tSetter)&(*VCA->setterFunctions[VCAAudioInput]);
-
-//    for (int i = 0; i < VCANumParams; i++)
-//    {
-//        processor->setterFunctions[i](VCA, VCA->params[i]);
-//    }
-    processor->inParameters = VCA->params;
-    processor->outParameters = VCA->outputs;
-    processor->audioInParameters = VCA->inputs;
-    processor->processorTypeID = ModuleTypeVCAModule;
-}
-
-
-

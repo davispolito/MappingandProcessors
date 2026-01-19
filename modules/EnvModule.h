@@ -9,7 +9,6 @@
 // #include "processor.h"
 #include "leaf-mempool.h"
 #include "leaf-envelopes.h"
-#include "processor.h"
 
 
 typedef enum {
@@ -29,15 +28,9 @@ typedef enum {
 
 typedef struct _tEnvModule {
     //start boilerplate  - processor represents all of these///
-    uint32_t moduleType;
+    ModuleHeader header;
     //if its a combo/multi object put them all here
     tADSRT theEnv;
-
-    uint32_t uniqueID;
-    tTickFuncReturningFloat tick; // The object's tick function
-    tSetter setterFunctions[MAX_NUM_PARAMS]; // Array containing setter functions
-    ATOMIC_FLOAT CPPDEREF params[MAX_NUM_PARAMS];
-    ATOMIC_FLOAT outputs[1];
     //end boilerplate  - processor represents all of these///
     //specific other variables
     const float* envTimeTableAddress;
@@ -63,8 +56,5 @@ void tEnvModule_setParameter(tEnvModule const env, int parameter_id, float input
 // Non-modulatable setters
 void tEnvModule_setRateTableLocation (tEnvModule const env, float* tableAddress);
 void tEnvModule_setSampleRate (tEnvModule const env, float sr);
-
-//init processors
-void tEnvModule_processorInit(tEnvModule const env, LEAF_NAMESPACE  tProcessor* processor);
 
 

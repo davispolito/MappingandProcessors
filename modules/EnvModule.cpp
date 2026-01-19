@@ -21,7 +21,7 @@ void tEnvModule_free(void** const env)
 //tick function
 void tEnvModule_tick (tEnvModule const env)
 {
-    env->outputs[0] = tADSRT_tick(&env->theEnv);
+    env->header.outputs[0] = tADSRT_tick(&env->theEnv);
 }
 
 //special noteOnFunction
@@ -30,7 +30,7 @@ void tEnvModule_onNoteOn(tEnvModule const env, float velocity)
     float envVel = velocity;
     if (velocity > 0.0001f)
     {
-        if (env->params[EnvUseVelocity] == 0) envVel = 1.f; // any way to avoid this double branching?
+        if (env->header.params[EnvUseVelocity] == 0) envVel = 1.f; // any way to avoid this double branching?
         tADSRT_on(&env->theEnv, envVel);
     }
     else
@@ -148,32 +148,16 @@ void tEnvModule_initToPool(void** const env, float* const params, float id, tMem
 #endif __cplusplus
     EnvModule->mempool = m;
 
-    EnvModule->uniqueID = id;
+    EnvModule->header.uniqueID = id;
     tADSRT_set(&EnvModule->theEnv, 1.0f,1000.0f,1.0f,1000.0f, NULL, 2048,(*mempool)->leaf);
 
-    EnvModule->tick = reinterpret_cast<tTickFuncReturningFloat>(tADSRT_tick);
-    EnvModule->setterFunctions[EnvEventWatchFlag] =(tSetter) &tEnvModule_onNoteOn;
+    EnvModule->header.tick = reinterpret_cast<tTickFuncReturningFloat>(tADSRT_tick);
+    EnvModule->header.setterFunctions[EnvEventWatchFlag] =(tSetter) &tEnvModule_onNoteOn;
 
     tEnvModule_setExpTableLocation ( EnvModule, &__leaf_table_exp_decay[0], EXP_DECAY_TABLE_SIZE);
     tEnvModule_setTimeScalingTableLocation( EnvModule,&__leaf_table_attack_decay_inc[0], ATTACK_DECAY_INC_TABLE_SIZE);
-    EnvModule->moduleType = ModuleTypeEnvModule;
+    EnvModule->header.moduleType = ModuleTypeEnvModule;
 }
 
 
 
-void tEnvModule_processorInit(tEnvModule const env, leaf::tProcessor* processor)
-{
-    // Checks that arguments are valid
-    assert (env != NULL);
-    assert (processor != NULL);
-
-    processor->processorUniqueID = env->uniqueID;
-    processor->object = env;
-    processor->numSetterFunctions = EnvNumParams;
-    processor->tick = reinterpret_cast<tTickFuncReturningVoid>(tEnvModule_tick);
-    processor->setterFunctions[EnvEventWatchFlag] =(tSetter) &tEnvModule_onNoteOn;
-
-    processor->inParameters = env->params;
-    processor->outParameters = env->outputs;
-    processor->processorTypeID = ModuleTypeEnvModule;
-}

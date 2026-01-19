@@ -39,19 +39,15 @@ typedef enum {
 typedef void (*tFiltInternalParamSetFunc)(void*, float);
 
 typedef struct _tFiltModule {
-    uint32_t moduleType;
+    ModuleHeader header;
     void* theFilt;
 
-    uint32_t uniqueID;
     float* dbTableAddress;
     uint32_t dbTableScalar;
     float dbTableOffset;
     float dbTableSizeMinusOne;
     float* resTableAddress;
     float resTableSizeMinusOne;
-    ATOMIC_FLOAT CPPDEREF params[MAX_NUM_PARAMS];
-    ATOMIC_FLOAT outputs[1];
-    ATOMIC_FLOAT inputs[1];
     uint32_t filtType;
     float amp;
     float cutoffKnob;
@@ -87,8 +83,6 @@ void tFiltModule_setDBtoATableLocation (tFiltModule const filt, float* tableAddr
 void tFiltModule_setResTableLocation (tFiltModule const filt, float* tableAddress, uint32_t tableSize);
 void tFiltModule_setSampleRate (tFiltModule const filt, float sr);
 
-//init processors
-void tFiltModule_processorInit(tFiltModule const filt, LEAF_NAMESPACE tProcessor* processor);
 
 
 

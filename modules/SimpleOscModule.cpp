@@ -162,7 +162,7 @@ void tOscModule_initToPool(void** const osc, float* const param, float id, tMemp
     memcpy(OscModule->params, param, OscNumParams*sizeof(float));
     int type = roundf(CPPDEREF OscModule->params[OscType]);
 #endif __cplusplus
-    OscModule->uniqueID = id;
+    OscModule->header.uniqueID = id;
 
     int type =OscTypeSawSquare;
     OscModule->osctype = type;
@@ -215,7 +215,7 @@ OscModule->pitchSmoother.factor = factor;
 			break;
 	}
 
-    OscModule->moduleType = ModuleTypeOscModule;
+    OscModule->header.moduleType = ModuleTypeOscModule;
 #ifndef __cplusplus
     for (int i = 0; i < OscNumParams; i++)
     {
@@ -313,7 +313,7 @@ void tOscModule_tick (tOscModule const osc,float* buffer)
 
 
 //    osc->freq_set_func(osc->theOsc, finalFreq);
-    osc->outputs[0] = *buffer;
+    osc->header.outputs[0] = *buffer;
 }
 
 
@@ -335,38 +335,6 @@ void tOscModule_setMTOFTableLocation (tOscModule const osc, float* const tableAd
     osc->mtofTable = tableAddress;
 }
 
-
-
-void tOscModule_processorInit(tOscModule const osc, leaf::tProcessor* const processor)
-{
-    // Checks that arguments are valid
-	if (osc == NULL)
-	{
-		return;
-	}
-	if (processor == NULL)
-	{
-		return;
-	}
-
-
-    processor->processorUniqueID = osc->uniqueID;
-    processor->object = osc;
-    processor->numSetterFunctions = OscNumParams;
-    processor->tick = (tTickFuncReturningVoid )&tOscModule_tick;
-
-
-    processor->setterFunctions[OscType] = (tSetter)&tOscModule_setType;
-
-    // for (int i = 0; i < OscNumParams; i++)
-    // {
-    //
-    //     processor->setterFunctions[i](osc, osc->params[i]);
-    // }
-    processor->inParameters = osc->params;
-    processor->outParameters = osc->outputs;
-    processor->processorTypeID = ModuleTypeOscModule;
-}
 
 
 

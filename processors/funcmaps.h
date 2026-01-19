@@ -11,15 +11,15 @@
 #include "StringModule.h"
 #include "VCAModule.h"
 #include "SoftClipModule.h"
-#include "processor.h"
+typedef void (*createModuleFunc)(void** const module, float* const params, float id, LEAF* const leaf);
 
+#include "defs.h"
 
 #ifdef __cplusplus
 namespace leaf
 {
 #endif
     //each file that includes this will getits own copy of it. this wastes memory. Should find a singleton style solution
-    extern createProcFunc proc_init_map[];
     extern createModuleFunc module_init_map[];
 
 #ifdef __cplusplus

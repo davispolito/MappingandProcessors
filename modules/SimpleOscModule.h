@@ -9,7 +9,6 @@
 // #include "processor.h"
 #include "leaf-mempool.h"
 #include "leaf-oscillators.h"
-#include "processor.h"
 #include "leaf-envelopes.h"
 typedef enum {
     OscEventWatchFlag,
@@ -43,11 +42,9 @@ typedef enum {
 typedef void (*tFreqSetFunc)(void*, float);
 
 typedef struct _tOscModule {
-    uint32_t moduleType;
+    ModuleHeader header;
+
     void* theOsc;
-    uint32_t uniqueID;
-    ATOMIC_FLOAT CPPDEREF params[MAX_NUM_PARAMS];
-    ATOMIC_FLOAT outputs[1];
 
     uint32_t osctype;
 
@@ -90,7 +87,5 @@ void tOscModule_tick (tOscModule const osc, float*);
 void tOscModule_setMTOFTableLocation (tOscModule const osc, float* tableAddress);
 void tOscModule_setSampleRate (tOscModule const osc, float sr);
 
-//init processors
-void tOscModule_processorInit(tOscModule const osc, LEAF_NAMESPACE tProcessor* processor);
 
 #endif //SIMPLEOSCMODULE_H
