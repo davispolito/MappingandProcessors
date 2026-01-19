@@ -13,6 +13,7 @@
 #include "FilterModule.h"
 #include "StringModule.h"
 #include "LFOModule.h"
+#include "SoftClipModule.h"
 // Process mapping function
 #ifdef __cplusplus
 namespace leaf
@@ -58,6 +59,9 @@ void tMapping_setParameter(void* module, int paramID, float value) {
             tStringModule_setParameter((tStringModule) module, (StringModelParams) paramID, value);
             break;
 
+        case ModuleTypeSoftClipModule:
+            tSoftClipModule_setParameter((tSoftClipModule) module, (SoftClipModuleParams) paramID, value);
+            break;
         default:
             // handle invalid type
             break;

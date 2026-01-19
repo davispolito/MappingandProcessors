@@ -27,6 +27,7 @@ namespace leaf
         (createProcFunc) tLFOModule_processorInit,
          (createProcFunc) tStringModule_processorInit,
          (createProcFunc) tVCAModule_processorInit,
+         (createProcFunc) tSoftClipModule_processorInit,
     };
     createModuleFunc module_init_map[] = {
         (createModuleFunc) tOscModule_init,
@@ -34,7 +35,8 @@ namespace leaf
         (createModuleFunc) tEnvModule_init,
         (createModuleFunc) tLFOModule_init,
         (createModuleFunc) tStringModule_init,
-        (createModuleFunc) tVCAModule_init
+        (createModuleFunc) tVCAModule_init,
+        (createModuleFunc) tSoftClipModule_init
     };
 //
 //void createProcessor(float *params, tProcessor* proc,LEAF* leaf)

@@ -10,6 +10,7 @@
 #include "SimpleOscModule.h"
 #include "StringModule.h"
 #include "VCAModule.h"
+#include "SoftClipModule.h"
 #include "processor.h"
 
 
