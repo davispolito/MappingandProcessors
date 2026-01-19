@@ -34,7 +34,6 @@ void tVCAModule_initToPool(void** const VCA, float* const params, float id, tMem
     int type = 0.0f;//roundf(VCAModule->params[VCAType]);
     VCAModule->mempool = m;
     VCAModule->amp = 1.0f;
-    VCAModule->header.tick = nullptr;//&tVCAModule_tick;
     VCAModule->header.moduleType = ModuleTypeVCAModule;
     VCAModule->external_input = 0;
     VCAModule->header.setterFunctions[VCAGain] = (tSetter)&(*tVCAModule_setGain);

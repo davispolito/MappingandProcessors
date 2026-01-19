@@ -133,7 +133,7 @@ void tFiltModule_initToPool(void** const filt, float* const params, float id, tM
     memcpy(FiltModule->params, params, FiltNumParams*sizeof(float));
 
 #endif
-    FiltModule->uniqueID = id;
+    FiltModule->header.uniqueID = id;
     //CPPDEREF FiltModule->params[FiltAudioInput] = 0.0f;
     int type = 0.0f;//roundf(FiltModule->params[FiltType]);
     FiltModule->mempool = m;
@@ -193,7 +193,7 @@ void tFiltModule_initToPool(void** const filt, float* const params, float id, tM
     	tLadderFilter_init   (m->leaf, (tLadderFilter*)FiltModule->theFilt,
 							  100.0f, 0.5f);
     }
-    FiltModule->headermoduleType = ModuleTypeFilterModule;
+    FiltModule->header.moduleType = ModuleTypeFilterModule;
 
 #ifndef __cplusplus
     for (int i = 0; i < FiltNumParams; i++)
@@ -209,7 +209,7 @@ void tFiltModule_initToPool(void** const filt, float* const params, float id, tM
 void tFiltModule_free(void** const filt)
 {
     _tFiltModule* FiltModule =(_tFiltModule*) *filt;
-    int type = roundf(CPPDEREF FiltModule->params[FiltType]);
+    int type = roundf(CPPDEREF FiltModule->header.params[FiltType]);
     if (type == FiltTypeLowpass) {
         tSVF_free((tSVF**)FiltModule->theFilt);
     }
@@ -252,55 +252,55 @@ void tFiltModule_tick (tFiltModule const filt, float* buffer)
     case FiltTypeLowpass:
     	tSVF_setFreqFast((tSVF*)filt->theFilt, cutoff);
         //buffer[0] += CPPDEREF filt->params[FiltAudioInput]; //buffer passed to function
-        buffer[0] = filt->outputs[0] = tSVF_tick((tSVF*)filt->theFilt,  buffer[0]) * filt->amp;
+        buffer[0] = filt->header.outputs[0] = tSVF_tick((tSVF*)filt->theFilt,  buffer[0]) * filt->amp;
     	break;
 
     case FiltTypeHighpass:
     	tSVF_setFreqFast((tSVF*)filt->theFilt, cutoff);
         //buffer[0] += CPPDEREF filt->params[FiltAudioInput]; //buffer passed to function
-        buffer[0] = filt->outputs[0] = tSVF_tick((tSVF*)filt->theFilt,  buffer[0]) * filt->amp;
+        buffer[0] = filt->header.outputs[0] = tSVF_tick((tSVF*)filt->theFilt,  buffer[0]) * filt->amp;
     	break;
 
     case FiltTypeBandpass:
     	tSVF_setFreqFast((tSVF*)filt->theFilt, cutoff);
         //buffer[0] += CPPDEREF filt->params[FiltAudioInput]; //buffer passed to function
-        buffer[0] = filt->outputs[0] = tSVF_tick((tSVF*)filt->theFilt,  buffer[0]) * filt->amp;
+        buffer[0] = filt->header.outputs[0] = tSVF_tick((tSVF*)filt->theFilt,  buffer[0]) * filt->amp;
     	break;
 
     case FiltTypeDiodeLowpass:
     	tDiodeFilter_setFreqFast((tDiodeFilter*)filt->theFilt, cutoff);
         //buffer[0] += CPPDEREF filt->params[FiltAudioInput]; //buffer passed to function
-        buffer[0] = filt->outputs[0] = tDiodeFilter_tickEfficient((tDiodeFilter*)filt->theFilt,  buffer[0]) * filt->amp;
+        buffer[0] = filt->header.outputs[0] = tDiodeFilter_tickEfficient((tDiodeFilter*)filt->theFilt,  buffer[0]) * filt->amp;
     	break;
 
     case FiltTypePeak:
     	tVZFilterBell_setFreqFast((tVZFilterBell*)filt->theFilt, cutoff);
 		//buffer[0] += CPPDEREF filt->params[FiltAudioInput]; //buffer passed to function
-		buffer[0] = filt->outputs[0] = tVZFilterBell_tick((tVZFilterBell*)filt->theFilt,  buffer[0]) * filt->amp;
+		buffer[0] = filt->header.outputs[0] = tVZFilterBell_tick((tVZFilterBell*)filt->theFilt,  buffer[0]) * filt->amp;
 		break;
 
     case FiltTypeHighShelf:
     	tVZFilterHS_setFreqFast((tVZFilterHS*)filt->theFilt, cutoff);
 		//buffer[0] += CPPDEREF filt->params[FiltAudioInput]; //buffer passed to function
-		buffer[0] = filt->outputs[0] = tVZFilterHS_tick((tVZFilterHS*)filt->theFilt,  buffer[0]) * filt->amp;
+		buffer[0] = filt->header.outputs[0] = tVZFilterHS_tick((tVZFilterHS*)filt->theFilt,  buffer[0]) * filt->amp;
 		break;
 
     case FiltTypeLowShelf:
     	tVZFilterLS_setFreqFast((tVZFilterLS*)filt->theFilt, cutoff);
 		//buffer[0] += CPPDEREF filt->params[FiltAudioInput]; //buffer passed to function
-		buffer[0] = filt->outputs[0] = tVZFilterLS_tick((tVZFilterLS*)filt->theFilt,  buffer[0]) * filt->amp;
+		buffer[0] = filt->header.outputs[0] = tVZFilterLS_tick((tVZFilterLS*)filt->theFilt,  buffer[0]) * filt->amp;
 		break;
 
     case FiltTypeNotch:
     	tVZFilterBR_setFreqFast((tVZFilterBR*)filt->theFilt, cutoff);
 		//buffer[0] += CPPDEREF filt->params[FiltAudioInput]; //buffer passed to function
-		buffer[0] = filt->outputs[0] = tVZFilterBR_tick((tVZFilterBR*)filt->theFilt,  buffer[0]) * filt->amp;
+		buffer[0] = filt->header.outputs[0] = tVZFilterBR_tick((tVZFilterBR*)filt->theFilt,  buffer[0]) * filt->amp;
 		break;
 
     case FiltTypeLadderLowpass:
     	tLadderFilter_setFreqFast((tLadderFilter*)filt->theFilt, cutoff);
 		//buffer[0] += CPPDEREF filt->params[FiltAudioInput]; //buffer passed to function
-		buffer[0] = filt->outputs[0] = tLadderFilter_tick((tLadderFilter*)filt->theFilt,  buffer[0]) * filt->amp;
+		buffer[0] = filt->header.outputs[0] = tLadderFilter_tick((tLadderFilter*)filt->theFilt,  buffer[0]) * filt->amp;
 		break;
     default:
     	break;
@@ -369,38 +369,7 @@ void tFiltModule_setSampleRate (tFiltModule const filt, float const sr)
     //tCycle_setSampleRate(filt->filts[0], sr);
 }
 
-//be sure to set the tables before initing the processor
-void tFiltModule_processorInit(tFiltModule const filt, leaf::tProcessor* const processor)
-{
-	// Checks that arguments are valid
-	if (filt == NULL)
-	{
-		return;
-	}
-	if (processor == NULL)
-	{
-		return;
-	}
 
-	processor->processorUniqueID = filt->uniqueID;
-	processor->object = filt;
-	processor->numSetterFunctions = FiltNumParams;
-	processor->tick = (tTickFuncReturningVoid ) &tFiltModule_tick;
-	processor->setterFunctions[FiltMidiPitch] = (tSetter)&tFiltModule_setMIDIPitch;
-	processor->setterFunctions[FiltCutoff] = (tSetter)&tFiltModule_setCutoff;
-	// processor->setterFunctions[FiltGain] = (tSetter)&(*filt->gain_set_func);
-	// processor->setterFunctions[FiltResonance] = (tSetter)&(*filt->Q_set_func);
-	// processor->setterFunctions[FiltKeyfollow] = (tSetter)&tFiltModule_blankFunction;
-	// processor->setterFunctions[FiltType] = (tSetter)&tFiltModule_blankFunction;
-	//    for (int i = 0; i < FiltNumParams; i++)
-	//    {
-	//        processor->setterFunctions[i](filt, filt->params[i]);
-	//    }
-	processor->inParameters = filt->params;
-	processor->outParameters = filt->outputs;
-	processor->audioInParameters = filt->inputs;
-	processor->processorTypeID = ModuleTypeFilterModule;
-}
 
 
 

@@ -23,7 +23,6 @@ add_library(procUtils
         modules/LFOModule.cpp
         modules/VCAModule.cpp
         modules/StringModule.cpp
-        processors/processor.cpp
         processors/mapping.cpp
         processors/sysex_chunks.cpp
         processors/midi_sysex.cpp

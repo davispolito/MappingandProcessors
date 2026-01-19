@@ -6,13 +6,13 @@
 #include "EnvModule.h"
 #include "StringModule.h"
 
-void callNoteOn(void* const module,  float velocity)
+void callNoteOn(ModuleHeader* const module,  float velocity)
 {
 
         if (!module) return;
 
         // Cast to base module type to access moduleType
-        uint32_t type = *((uint32_t*)module); // assuming moduleType is the first member of all modules
+        uint32_t type = module->moduleType; // assuming moduleType is the first member of all modules
         switch ((ModuleType)type)
         {
             case ModuleTypeOscModule:

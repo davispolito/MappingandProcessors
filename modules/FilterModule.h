@@ -8,7 +8,6 @@
 #include "defs.h"
 #include "leaf-mempool.h"
 #include "leaf-filters.h"
-#include "processor.h"
 
 
 typedef enum {

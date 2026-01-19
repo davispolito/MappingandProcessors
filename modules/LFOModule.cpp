@@ -45,7 +45,7 @@ void tLFOModule_initToPool(void** const lfo, float* const params, float id, tMem
         tSineTriLFO_init   (m->leaf, (tSineTriLFO*)LFOModule->theLFO);
 
         LFOModule->freq_set_func = (tSetter)(&tSineTriLFO_setFreq);
-        LFOModule->header.tick          = (tTickFuncReturningFloat)(&tSineTriLFO_tick);
+        // LFOModule->header.tick          = (tTickFuncReturningFloat)(&tSineTriLFO_tick);
     }
     else if (LFOModule->lfo_type == LFOTypeSawSquare)
     {
@@ -53,7 +53,7 @@ void tLFOModule_initToPool(void** const lfo, float* const params, float id, tMem
         tSawSquareLFO_init   (m->leaf, (tSawSquareLFO*)LFOModule->theLFO);
 
         LFOModule->freq_set_func = (tSetter)(&tSawSquareLFO_setFreq);
-        LFOModule->header.tick          = (tTickFuncReturningFloat)(&tSawSquareLFO_tick);
+        // LFOModule->header.tick          = (tTickFuncReturningFloat)(&tSawSquareLFO_tick);
     }
     else if (LFOModule->lfo_type == LFOTypeSine)
     {
@@ -61,7 +61,7 @@ void tLFOModule_initToPool(void** const lfo, float* const params, float id, tMem
         tCycle_init   (m->leaf, (tCycle*)LFOModule->theLFO);
 
         LFOModule->freq_set_func = (tSetter)(&tCycle_setFreq);
-        LFOModule->header.tick          = (tTickFuncReturningFloat)(&tCycle_tick);
+        // LFOModule->header.tick          = (tTickFuncReturningFloat)(&tCycle_tick);
     }
     else if (LFOModule->lfo_type == LFOTypeTri)
     {
@@ -69,7 +69,7 @@ void tLFOModule_initToPool(void** const lfo, float* const params, float id, tMem
         tTriLFO_init   (m->leaf, (tTriLFO*)LFOModule->theLFO);
 
         LFOModule->freq_set_func = (tSetter)(&tTriLFO_setFreq);
-        LFOModule->header.tick          = (tTickFuncReturningFloat)(&tTriLFO_tick);
+        // LFOModule->header.tick          = (tTickFuncReturningFloat)(&tTriLFO_tick);
     }
     else if (LFOModule->lfo_type == LFOTypeSaw)
     {
@@ -77,7 +77,7 @@ void tLFOModule_initToPool(void** const lfo, float* const params, float id, tMem
         tIntPhasor_init   (m->leaf, (tIntPhasor*)LFOModule->theLFO);
 
         LFOModule->freq_set_func = (tSetter)(&tIntPhasor_setFreq);
-        LFOModule->header.tick          = (tTickFuncReturningFloat)(&tIntPhasor_tickBiPolar);
+        // LFOModule->header.tick          = (tTickFuncReturningFloat)(&tIntPhasor_tickBiPolar);
     }
     else if (LFOModule->lfo_type == LFOTypeSquare)
     {
@@ -85,7 +85,7 @@ void tLFOModule_initToPool(void** const lfo, float* const params, float id, tMem
         tSquareLFO_init   (m->leaf, (tSquareLFO*)LFOModule->theLFO);
 
         LFOModule->freq_set_func = (tSetter)(&tSquareLFO_setFreq);
-        LFOModule->header.tick          = (tTickFuncReturningFloat)(&tSquareLFO_tick);
+        // LFOModule->header.tick          = (tTickFuncReturningFloat)(&tSquareLFO_tick);
     }
 
     LFOModule->header.moduleType = ModuleTypeLFOModule;

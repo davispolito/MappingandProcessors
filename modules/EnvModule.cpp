@@ -27,7 +27,7 @@ void tEnvModule_tick (tEnvModule const env)
 //special noteOnFunction
 void tEnvModule_onNoteOn(tEnvModule const env, float velocity)
 {
-    float envVel = velocity;
+        float envVel = velocity;
     if (velocity > 0.0001f)
     {
         if (env->header.params[EnvUseVelocity] == 0) envVel = 1.f; // any way to avoid this double branching?
@@ -72,6 +72,7 @@ void tEnvModule_setParameter(tEnvModule const  env, int parameter_id, float inpu
 
         case EnvAttack:
         {
+            input = (input -1.f) * -1;
             input *= env->envTimeTableSizeMinusOne;
             int const inputInt = (int)input;
             float const inputFloat = (float)inputInt - input;
@@ -83,6 +84,8 @@ void tEnvModule_setParameter(tEnvModule const  env, int parameter_id, float inpu
 
         case EnvDecay:
         {
+            input = (input -1.f) * -1;
+
             input *= env->envTimeTableSizeMinusOne;
             int const inputInt = (int)input;
             float const inputFloat = (float)inputInt - input;
@@ -149,9 +152,16 @@ void tEnvModule_initToPool(void** const env, float* const params, float id, tMem
     EnvModule->mempool = m;
 
     EnvModule->header.uniqueID = id;
-    tADSRT_set(&EnvModule->theEnv, 1.0f,1000.0f,1.0f,1000.0f, NULL, 2048,(*mempool)->leaf);
+    //exponential buffer rising from 0 to 1
+    LEAF_generate_exp(EnvModule->expBuffer, 1000.0f, -1.0f, 0.0f, -0.0008f, EXP_BUFFER_SIZE);
 
-    EnvModule->header.tick = reinterpret_cast<tTickFuncReturningFloat>(tADSRT_tick);
+    // exponential decay buffer falling from 1 to
+    LEAF_generate_exp(EnvModule->decayExpBuffer, 0.001f, 0.0f, 1.0f, -0.0008f, DECAY_EXP_BUFFER_SIZE);
+    EnvModule->expBufferSizeMinusOne = EXP_BUFFER_SIZE - 1;
+
+    EnvModule->decayExpBufferSizeMinusOne = DECAY_EXP_BUFFER_SIZE - 1;
+    tADSRT_set(&EnvModule->theEnv, 1.0f,1000.0f,1.0f,1000.0f, EnvModule->decayExpBuffer, DECAY_EXP_BUFFER_SIZE,(*mempool)->leaf);
+    tADSRT_setSampleRate(&EnvModule->theEnv,m->leaf->sampleRate);
     EnvModule->header.setterFunctions[EnvEventWatchFlag] =(tSetter) &tEnvModule_onNoteOn;
 
     tEnvModule_setExpTableLocation ( EnvModule, &__leaf_table_exp_decay[0], EXP_DECAY_TABLE_SIZE);

@@ -64,5 +64,5 @@ void tLFOModule_setParameter(tLFOModule const, LFOParams param_type, float input
 void tLFOModule_setSampleRate (tLFOModule const lfo, float sr);
 
 
-
+void tLFOModule_tick (tLFOModule const lfo);
 #endif //LFOMODULE_H

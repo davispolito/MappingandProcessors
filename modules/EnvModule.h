@@ -10,7 +10,8 @@
 #include "leaf-mempool.h"
 #include "leaf-envelopes.h"
 
-
+#define EXP_BUFFER_SIZE 2048
+#define DECAY_EXP_BUFFER_SIZE 2048
 typedef enum {
     EnvEventWatchFlag, //all of them need this
     EnvAttack,
@@ -36,6 +37,11 @@ typedef struct _tEnvModule {
     const float* envTimeTableAddress;
     float envTimeTableSizeMinusOne;
     uint32_t tableSize;
+    float expBuffer[EXP_BUFFER_SIZE];
+    float expBufferSizeMinusOne;
+
+    float decayExpBuffer[DECAY_EXP_BUFFER_SIZE];
+    float decayExpBufferSizeMinusOne;
     //mempool
     tMempool* mempool;
 } _tEnvModule;
@@ -46,6 +52,7 @@ typedef _tEnvModule* tEnvModule;
 void tEnvModule_init(void** const env, float* const params, float id, LEAF* const leaf);
 void tEnvModule_initToPool(void** const env, float* const params, float id, tMempool** const mempool);
 void tEnvModule_free(void** const env);
+void tEnvModule_tick (tEnvModule const env);
 
 //note on action
 void tEnvModule_onNoteOn(tEnvModule const env, float vel);

@@ -4,16 +4,15 @@
 
 #ifndef EVENT_EMITTER_H
 #define EVENT_EMITTER_H
-#include "processor.h"
 #include "defs.h"
 // typedef void (*tNoteOnFunc)(void* const env, float velocity);
 
 typedef struct tEventEmitter {
     uint8_t uuid; //ID for the mapping's parameter
-    void* listeners[MAX_NUM_VOICES][MAX_EVENT_LISTENERS];
+    ModuleHeader* listeners[MAX_NUM_VOICES][MAX_EVENT_LISTENERS];
     uint8_t numListeners;
 } tEventEmitter;
 
-void callNoteOn(void* const object, float velocity);
+void callNoteOn(ModuleHeader* const object, float velocity);
 
 #endif //NOTE_EMITTER_H
