@@ -39,7 +39,7 @@ void tStringModule_initToPool(void** const s, float* const params, float id, tMe
 void tStringModule_tick(tStringModule const s,float* buffer)
     {
         buffer[0] = tSimpleLivingString3_tick(s->theString, buffer[0] );
-        }
+    }
 
 void tStringModule_onNoteOn(tStringModule const s, float velocity)
 {
