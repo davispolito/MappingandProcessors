@@ -10,6 +10,7 @@
 void tEnvModule_init(void** const env, float* params, float id, LEAF* const leaf)
 {
     tEnvModule_initToPool(env, params, id, &leaf->mempool);
+
 }
 
 
@@ -77,7 +78,7 @@ void tEnvModule_setParameter(tEnvModule const  env, int parameter_id, float inpu
             int const inputInt = (int)input;
             float const inputFloat = (float)inputInt - input;
             int const nextPos = LEAF_clip(0.0f, inputInt + 1.0f, env->envTimeTableSizeMinusOne);
-            float const theValue = LEAF_clip(0.1f, (env->envTimeTableAddress[inputInt] * (1.0f - inputFloat)) + (env->envTimeTableAddress[nextPos] * inputFloat), 10.0f);
+            float const theValue = LEAF_clip(0.1f, (env->envTimeTableAddress[inputInt] * (1.0f - inputFloat)) + (env->envTimeTableAddress[nextPos] * inputFloat), 20000.0f);
             tADSRT_setAttack(&env->theEnv, theValue + 0.001f);
             break;
         }
@@ -86,9 +87,9 @@ void tEnvModule_setParameter(tEnvModule const  env, int parameter_id, float inpu
         {
             input *= env->envTimeTableSizeMinusOne;
             int const inputInt = (int)input;
-            float const inputFloat = (float)inputInt - input;
+            float const inputFloat = input -(float)inputInt;
             int const nextPos = LEAF_clip(0.0f, inputInt + 1.0f, env->envTimeTableSizeMinusOne);
-            float const theValue = LEAF_clip(0.1f, (env->envTimeTableAddress[inputInt] * (1.0f - inputFloat)) + (env->envTimeTableAddress[nextPos] * inputFloat), 10.0f);
+            float const theValue = LEAF_clip(0.1f, (env->envTimeTableAddress[inputInt] * (1.0f - inputFloat)) + (env->envTimeTableAddress[nextPos] * inputFloat), 20000.0f);
             tADSRT_setDecay(&env->theEnv, theValue + 0.001f);
             break;
         }
@@ -103,9 +104,9 @@ void tEnvModule_setParameter(tEnvModule const  env, int parameter_id, float inpu
         {
             input *= env->envTimeTableSizeMinusOne;
             int const inputInt = (int)input;
-            float const inputFloat = (float)inputInt - input;
+            float const inputFloat = input - (float)inputInt;
             int const nextPos = LEAF_clip(0.0f, inputInt + 1.0f, env->envTimeTableSizeMinusOne);
-            float const theValue = LEAF_clip(0.1f, (env->envTimeTableAddress[inputInt] * (1.0f - inputFloat)) + (env->envTimeTableAddress[nextPos] * inputFloat), 10.0f);
+            float const theValue = LEAF_clip(0.1f, (env->envTimeTableAddress[inputInt] * (1.0f - inputFloat)) + (env->envTimeTableAddress[nextPos] * inputFloat), 20000.0f);
             tADSRT_setRelease(&env->theEnv, theValue + 0.001f);
             break;
         }
@@ -155,8 +156,14 @@ void tEnvModule_initToPool(void** const env, float* const params, float id, tMem
     EnvModule->tick = reinterpret_cast<tTickFuncReturningFloat>(tADSRT_tick);
     EnvModule->setterFunctions[EnvEventWatchFlag] =(tSetter) &tEnvModule_onNoteOn;
 
-    tEnvModule_setExpTableLocation ( EnvModule, &__leaf_table_exp_decay[0], EXP_DECAY_TABLE_SIZE);
-    tEnvModule_setTimeScalingTableLocation( EnvModule,&__leaf_table_attack_decay_inc[0], ATTACK_DECAY_INC_TABLE_SIZE);
+    tEnvModule_setExpTableLocation (EnvModule, &__leaf_table_exp_decay[0], EXP_DECAY_TABLE_SIZE);
+    if((*mempool)->leaf->envTimeTable == NULL)
+    {
+        tLookupTable_create(&m, &(*mempool)->leaf->envTimeTable);
+        tLookupTable_init((*mempool)->leaf,(*mempool)->leaf->envTimeTable, 0.0001f, 20000.f, 4000.f,2048);
+
+    }
+    tEnvModule_setTimeScalingTableLocation(EnvModule, (*mempool)->leaf->envTimeTable->table, 2048);
     EnvModule->moduleType = ModuleTypeEnvModule;
 }
 
