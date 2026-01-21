@@ -24,6 +24,7 @@ typedef enum {
     SoftClipInputGain,
     SoftClipOffset,
     SoftClipShape,
+    SoftClipOutputGain,
     SoftClipNumParams
 } SoftClipModuleParams;
 
@@ -39,6 +40,7 @@ typedef struct _tSoftClipModule {
     ATOMIC_FLOAT inputs[1];
     float shapeDivider;
     float inputGain;
+    float outputGain;
     float offset;
     tHighpass highpass;
 

@@ -74,6 +74,12 @@ void tSoftClipModule_setParameter(tSoftClipModule const  c, int parameter_id, fl
             break;
         }
 
+        case SoftClipOutputGain:
+        {
+            c->outputGain = input;
+            break;
+        }
+
         default:
             break;
     }
@@ -91,6 +97,7 @@ void tSoftClipModule_initToPool(void** const c, float* const params, float id, t
     tHighpass_init   (SoftClipModule->mempool->leaf, &SoftClipModule->highpass, 20.0f);
     SoftClipModule->mempool = m;
     SoftClipModule->inputGain = 1.0f;
+    SoftClipModule->outputGain = 1.0f;
     SoftClipModule->offset = 0.0f;
     SoftClipModule->shapeDivider = 1.0f;
 
