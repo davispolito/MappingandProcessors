@@ -16,6 +16,7 @@
     #define ATOMIC_FLOAT float
 #endif
 #ifdef __cplusplus
+
 extern "C" {
 #endif
 
