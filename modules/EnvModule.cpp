@@ -164,22 +164,6 @@ void tEnvModule_initToPool (void** const env, float* const params, float id, tMe
         tLookupTable_init ((*mempool)->leaf, (*mempool)->leaf->envTimeTable, 0.0001f, 20000.f, 4000.f, 2048);
     }
     tEnvModule_setTimeScalingTableLocation (EnvModule, (*mempool)->leaf->envTimeTable->table, 2048);
-    EnvModule->moduleType = ModuleTypeEnvModule;
+    EnvModule->header.moduleType = ModuleTypeEnvModule;
 }
 
-void tEnvModule_processorInit (tEnvModule const env, leaf::tProcessor* processor)
-{
-    // Checks that arguments are valid
-    assert (env != NULL);
-    assert (processor != NULL);
-
-    processor->processorUniqueID = env->uniqueID;
-    processor->object = env;
-    processor->numSetterFunctions = EnvNumParams;
-    processor->tick = reinterpret_cast<tTickFuncReturningVoid> (tEnvModule_tick);
-    processor->setterFunctions[EnvEventWatchFlag] = (tSetter) &tEnvModule_onNoteOn;
-
-    processor->inParameters = env->params;
-    processor->outParameters = env->outputs;
-    processor->processorTypeID = ModuleTypeEnvModule;
-}
