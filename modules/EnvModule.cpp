@@ -69,10 +69,9 @@ void tEnvModule_setParameter (tEnvModule const env, int parameter_id, float inpu
 
         case EnvAttack:
         {
-            input = (input - 1.f) * -1;
             input *= env->envTimeTableSizeMinusOne;
             int const inputInt = (int) input;
-            float const inputFloat = (float) inputInt - input;
+            float const inputFloat = input - (float)inputInt;
             int const nextPos = LEAF_clip (0.0f, inputInt + 1.0f, env->envTimeTableSizeMinusOne);
             float const theValue = LEAF_clip (0.1f, (env->envTimeTableAddress[inputInt] * (1.0f - inputFloat)) + (env->envTimeTableAddress[nextPos] * inputFloat), 20000.0f);
             tADSRT_setAttack (&env->theEnv, theValue + 0.001f);
@@ -81,8 +80,6 @@ void tEnvModule_setParameter (tEnvModule const env, int parameter_id, float inpu
 
         case EnvDecay:
         {
-            input = (input - 1.f) * -1;
-
             input *= env->envTimeTableSizeMinusOne;
             int const inputInt = (int) input;
             float const inputFloat = input - (float) inputInt;
