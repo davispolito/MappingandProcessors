@@ -154,7 +154,7 @@ void tEnvModule_initToPool (void** const env, float* const params, float id, tMe
     tADSRT_setSampleRate (&EnvModule->theEnv, m->leaf->sampleRate);
     EnvModule->header.setterFunctions[EnvEventWatchFlag] = (tSetter) &tEnvModule_onNoteOn;
 
-    tEnvModule_setExpTableLocation (EnvModule, &__leaf_table_exp_decay[0], EXP_DECAY_TABLE_SIZE);
+    tEnvModule_setExpTableLocation (EnvModule, EnvModule->decayExpBuffer, DECAY_EXP_BUFFER_SIZE);
     if ((*mempool)->leaf->envTimeTable == NULL)
     {
         tLookupTable_create (&m, &(*mempool)->leaf->envTimeTable);
