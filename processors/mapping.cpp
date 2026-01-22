@@ -14,6 +14,7 @@
 #include "StringModule.h"
 #include "LFOModule.h"
 #include "SoftClipModule.h"
+
 // Process mapping function
 #ifdef __cplusplus
 namespace leaf
@@ -78,6 +79,7 @@ void processMapping (tMapping* mapping)
         sum += (*mapping->inSources[i] * CPPDEREF mapping->scalingValues[i]) + mapping->bipolarOffset[i];
     }
     tMapping_setParameter(mapping->destObject,mapping->paramID,sum);
+
     // mapping->setter(mapping->destObject, sum);
 }
 void tMapping_free (tMapping** const mapping) {
