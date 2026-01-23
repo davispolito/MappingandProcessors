@@ -19,9 +19,8 @@ typedef enum {
     EnvSustain,
     EnvRelease,
     EnvLeak,
-    EnvShapeAttack,
-    EnvShapeRelease,
-    EnvUseVelocity,
+    EnvShape,
+    EnvVelocitySense,
     EnvNumParams //all of them need this
 } EnvParams;
 

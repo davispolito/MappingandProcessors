@@ -20,6 +20,7 @@ void tStringModule_initToPool(void** const s, float* const params, float id, tMe
     memcpy(module->params, params, StringNumParams);
     #endif
     module->mempool = m;
+    module->header.moduleType = ModuleTypeStringModule;
    //can't figure out how to get this module to add itself as a listener of the event emitter... -JS
     tSimpleLivingString3_create (mempool, &module->theString);
     tSimpleLivingString3_init   (m->leaf,
@@ -33,7 +34,6 @@ void tStringModule_initToPool(void** const s, float* const params, float id, tMe
                                  1.0,
                                  0);
     module->header.setterFunctions[StringEventWatchFlag] =(tSetter) &tStringModule_onNoteOn;
-
 }
 
 void tStringModule_tick(tStringModule const s,float* buffer)
@@ -58,11 +58,11 @@ void tStringModule_setParameter(tStringModule const s, StringModelParams param, 
     switch (param)
     {
         case StringEventWatchFlag:
-            // TODO: implement EventWatchFlag inline if needed
+            CPPDEREF s->header.params[StringEventWatchFlag] = input; // store directly or implement oversample logic
             break;
 
         case StringOversample:
-            *s->header.params[StringOversample] = input; // store directly or implement oversample logic
+            CPPDEREF s->header.params[StringOversample] = input; // store directly or implement oversample logic
             break;
 
         case StringFreq:
