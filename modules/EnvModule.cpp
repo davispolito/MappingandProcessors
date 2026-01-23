@@ -28,8 +28,8 @@ void tEnvModule_onNoteOn (tEnvModule const env, float velocity)
     float envVel = velocity;
     if (velocity > 0.0001f)
     {
-        if (env->header.params[EnvUseVelocity] == 0)
-            envVel = 1.f; // any way to avoid this double branching?
+        float velSense = CPPDEREF env->header.params[EnvVelocitySense];
+        envVel = envVel * velSense + (1.0f - velSense);
         tADSRT_on (&env->theEnv, envVel);
     }
     else
@@ -112,17 +112,13 @@ void tEnvModule_setParameter (tEnvModule const env, int parameter_id, float inpu
             break;
         }
 
-        case EnvShapeAttack:
+        case EnvShape:
         {
+            tADSRT_setShape (&env->theEnv, LEAF_clip (0.0f, input, 1.0));
             break;
         }
 
-        case EnvShapeRelease:
-        {
-            break;
-        }
-
-        case EnvUseVelocity:
+        case EnvVelocitySense:
         {
             break;
         }
@@ -142,8 +138,6 @@ void tEnvModule_initToPool (void** const env, float* const params, float id, tMe
     EnvModule->mempool = m;
 
     EnvModule->header.uniqueID = id;
-    //exponential buffer rising from 0 to 1
-    LEAF_generate_exp (EnvModule->expBuffer, 1000.0f, -1.0f, 0.0f, -0.0008f, EXP_BUFFER_SIZE);
 
     // exponential decay buffer falling from 1 to
     LEAF_generate_exp (EnvModule->decayExpBuffer, 0.001f, 0.0f, 1.0f, -0.0008f, DECAY_EXP_BUFFER_SIZE);
